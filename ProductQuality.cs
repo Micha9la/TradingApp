@@ -8,11 +8,11 @@ namespace TradingApp
 {
     internal class ProductQuality
     {
-		private string _protein;
-		public string Protein
+		private float _proteinPercentage;
+		public float Protein
 		{
-			get { return _protein; }
-			set { _protein = value; }
+			get { return _proteinPercentage; }
+			set { _proteinPercentage = value; }
 		}
 
 		private int _fallingNumber;

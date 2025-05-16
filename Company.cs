@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-    internal class Company
+    public class Company
     {
-    }
+		private string _companyName;
+
+		public string CompanyName
+		{
+			get { return _companyName; }
+			set { _companyName = value; }
+		}
+
+		private CompanyType _buyerOrSeller;
+
+		public  CompanyType BuyerOrSeller
+		{
+			get { return _buyerOrSeller; }
+			set { _buyerOrSeller = value; }
+		}
+
+
+	}
 }

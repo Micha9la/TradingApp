@@ -36,7 +36,7 @@ namespace TradingApp
 			set { _deliveryInfo = value; }
 		}
         
-		private decimal _Price;
+		private decimal _price;
         public decimal Price
 		{
 			get { return _Price; }

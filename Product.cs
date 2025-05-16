@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-    internal class Product
+    public class Product
     {
 		private string _productName;
 
