@@ -22,5 +22,13 @@ namespace TradingApp
 			set { _fallingNumber = value; }
 		}
 
+		private int _weight;
+
+		public int Weight
+		{
+			get { return _weight; }
+			set { _weight = value; }
+		}
+
 	}
 }
