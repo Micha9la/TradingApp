@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-    internal class TradeType
-    {
-    }
+    public enum CompanyType
+        {
+            Seller,
+            Buyer
+        }
+    
 }

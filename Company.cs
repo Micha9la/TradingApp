@@ -15,15 +15,5 @@ namespace TradingApp
 			get { return _companyName; }
 			set { _companyName = value; }
 		}
-
-		private CompanyType _buyerOrSeller;
-
-		public  CompanyType BuyerOrSeller
-		{
-			get { return _buyerOrSeller; }
-			set { _buyerOrSeller = value; }
-		}
-
-
 	}
 }

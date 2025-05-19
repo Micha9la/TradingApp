@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-    internal class ProductQuality
+    public class ProductQuality
     {
 		private float _proteinPercentage;
 		public float Protein
