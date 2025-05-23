@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-    public enum CompanyType
+    public enum CompanyRoleInTrade
         {
             Seller,
             Buyer

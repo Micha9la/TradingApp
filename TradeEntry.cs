@@ -16,18 +16,18 @@ namespace TradingApp
 		}
 
 		private Company _company;
-		public Company BuyerOrSeller
+		public Company Company
 		{
 			get { return _company; }
 			set { _company = value; }
 		}
 
-		private int myVar;
+		private CompanyRoleInTrade _companyRole;
 
-		public int MyProperty
+		public CompanyRoleInTrade CompanyRole
 		{
-			get { return myVar; }
-			set { myVar = value; }
+			get { return _companyRole; }
+			set { _companyRole = value; }
 		}
 
 		private Product _product;
@@ -47,15 +47,15 @@ namespace TradingApp
 		private decimal _price;
         public decimal Price
 		{
-			get { return _Price; }
-			set { _Price = value; }
+			get { return _price; }
+			set { _price = value; }
 		}
 
-		private string _Currency;
+		private string _currency;
 		public string Currency
 		{
-			get { return _Currency; }
-			set { _Currency = value; }
+			get { return _currency; }
+			set { _currency = value; }
 		}
 
 		private DateTime _date;

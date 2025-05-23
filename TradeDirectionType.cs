@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingApp
 {
-     public enum TradeType
+     public enum TradeDirectionType
      {
          Offer,
          Demand
