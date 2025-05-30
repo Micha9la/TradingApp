@@ -15,8 +15,7 @@ namespace TradingApp
                 new TradeEntry
                 {
                     TradeDirection = TradeDirectionType.Offer,
-                    Company = new Company { CompanyName = "BarleyCompany" },
-                    CompanyRole = CompanyRoleInTrade.Seller,
+                    Company = new Company { CompanyName = "AgroLife" },
                     Product = new Product
                     {
                         ProductName = "Barley",
@@ -42,8 +41,7 @@ namespace TradingApp
                 new TradeEntry
                 {
                     TradeDirection = TradeDirectionType.Demand,
-                    Company = new Company { CompanyName = "BarleyCompany" },
-                    CompanyRole = CompanyRoleInTrade.Seller,
+                    Company = new Company { CompanyName = "Agrolife" },                    
                     Product = new Product
                     {
                         ProductName = "Barley",

@@ -8,6 +8,7 @@ namespace TradingApp
 {
     public class ProductQuality
     {
+		//percentige 11,1% (drop down menu with suggestions)
 		private float _proteinPercentage;
 		public float Protein
 		{
@@ -15,20 +16,74 @@ namespace TradingApp
 			set { _proteinPercentage = value; }
 		}
 
+		//Unit: seconds
 		private int _fallingNumber;
 		public int FallingNumber
 		{
 			get { return _fallingNumber; }
 			set { _fallingNumber = value; }
 		}
+		//kg/hl
+		private int _testWeight;
 
-		private int _weight;
-
-		public int Weight
+		public int TestWeight
 		{
-			get { return _weight; }
-			set { _weight = value; }
+			get { return _testWeight; }
+			set { _testWeight = value; }
 		}
+
+		//%
+		private int _glassiness;
+		public int Glassiness
+		{
+			get { return _glassiness; }
+			set { _glassiness = value; }
+		}
+
+		private int _gmp;
+		public int GMP
+		{
+			get { return _gmp; }
+			set { _gmp = value; }
+		}
+
+		private int _ISCC;
+		public int ISCC
+		{
+			get { return _ISCC; }
+			set { _ISCC = value; }
+		}
+        //%
+        private int _oilContent;
+        public int OilContent
+        {
+            get { return _oilContent; }
+            set { _oilContent = value; }
+        }
+
+        //%
+        private int _damagedKernels;
+        public int DamagedKernels
+        {
+            get { return _damagedKernels; }
+            set { _damagedKernels = value; }
+        }
+
+		//unit ppb
+		private int _don;
+		public int Don
+		{
+			get { return _don; }
+			set { _don = value; }
+		}
+		private int _afla;
+
+		public int MyProperty
+		{
+			get { return _afla; }
+			set { _afla = value; }
+		}
+
 
 	}
 }

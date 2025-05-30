@@ -15,5 +15,6 @@ namespace TradingApp
 			get { return _companyName; }
 			set { _companyName = value; }
 		}
+		//contact person
 	}
 }

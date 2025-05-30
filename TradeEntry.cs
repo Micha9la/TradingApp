@@ -14,20 +14,12 @@ namespace TradingApp
 			get { return _tradeDirection; }
 			set { _tradeDirection = value; }
 		}
-
+		//not visible to customer
 		private Company _company;
 		public Company Company
 		{
 			get { return _company; }
 			set { _company = value; }
-		}
-
-		private CompanyRoleInTrade _companyRole;
-
-		public CompanyRoleInTrade CompanyRole
-		{
-			get { return _companyRole; }
-			set { _companyRole = value; }
 		}
 
 		private Product _product;
@@ -57,20 +49,26 @@ namespace TradingApp
 			get { return _currency; }
 			set { _currency = value; }
 		}
-
+		//not visible to customers
 		private DateTime _date;
 		public DateTime Date
 		{
 			get { return _date; }
 			set { _date = value; }
 		}
-
-		private string _notes;
-		public string Notes
+		//not visible for customers
+		private string _privateNotes;
+		public string PrivateNotes
 		{
-			get { return _notes; }
-			set { _notes = value; }
+			get { return _publicNotes; }
+			set { _publicNotes = value; }
 		}
 
-	}
+        private string _publicNotes;
+        public string Notes
+        {
+            get { return _publicNotes; }
+            set { _publicNotes = value; }
+        }
+    }
 }

@@ -16,8 +16,8 @@ namespace TradingApp
 			set { _deliveryParity = value; }
 		}
 
+		//Townname +25km (it is always +25km)
 		private string _locationDetail;
-
 		public string LocationDetail
 		{
 			get { return _locationDetail; }
