@@ -25,23 +25,13 @@ namespace TradingApp
 		}
 
 		//tons
-		private int _quantity;
-		public int Quantity
+		private string _quantity;
+		public string Quantity
 		{
 			get { return _quantity; }
 			set { _quantity = value; }
 		}
 
-
-		//crop year (not always important- goes to notes)
-		private int _catalogNumber;
-
-		public int CatalogNumber
-		{
-			get { return _catalogNumber; }
-			set { _catalogNumbe = value; }
-		}
-
-		//catalog number can start from 1 again
+        //crop year (not always important- goes to notes)
 	}
 }

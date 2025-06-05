@@ -8,7 +8,15 @@ namespace TradingApp
 {
     public class TradeEntry
     {
-		private TradeDirectionType _tradeDirection;
+        
+        //catalog number can start from 1. every TradeEntry gets a number!!
+        private int _catalogNumber;
+        public int CatalogNumber
+        {
+            get { return _catalogNumber; }
+            set { _catalogNumber = value; }
+        }
+        private TradeDirectionType _tradeDirection;
 		public  TradeDirectionType TradeDirection
 		{
 			get { return _tradeDirection; }
@@ -50,22 +58,40 @@ namespace TradingApp
 			set { _currency = value; }
 		}
 		//not visible to customers
-		private DateTime _date;
-		public DateTime Date
+		private string _date;
+		public string Date
 		{
 			get { return _date; }
 			set { _date = value; }
 		}
+
+		private ISCC _iscc;
+
+		public ISCC ISCC
+		{
+			get { return _iscc; }
+			set { _iscc = value; }
+		}
+		private GMP _gmp;
+
+		public  GMP GMP
+		{
+			get { return _gmp; }
+			set { _gmp = value; }
+		}
+
+
 		//not visible for customers
 		private string _privateNotes;
 		public string PrivateNotes
 		{
-			get { return _publicNotes; }
-			set { _publicNotes = value; }
+			get { return _privateNotes; }
+			set { _privateNotes = value; }
 		}
 
+		//visible to customer, part of message to customer. crop year
         private string _publicNotes;
-        public string Notes
+        public string PublicNotes
         {
             get { return _publicNotes; }
             set { _publicNotes = value; }

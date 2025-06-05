@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,61 +9,77 @@ namespace TradingApp
 {
     public static class TestData
     {
+        private static int _nextCatalogNumber = 1;
+
+        public static TradeEntry CreateTradeEntry(TradeEntry trade)
+        {
+            trade.CatalogNumber = _nextCatalogNumber++;
+            return trade;
+        }
         public static List<TradeEntry> GetSampleTrades()
         {
             return new List<TradeEntry>
+        {
+            CreateTradeEntry(new TradeEntry
             {
-                new TradeEntry
-                {
                     TradeDirection = TradeDirectionType.Offer,
                     Company = new Company { CompanyName = "AgroLife" },
                     Product = new Product
                     {
-                        ProductName = "Barley",
+                        ProductName = "Wheat",
                         ProductQuality = new ProductQuality
                         {
-                            Protein = 13f,
-                            Weight = 1000,
-                            FallingNumber = 1000,
-                        }
+                            Protein = 13,
+                            TestWeight = 78,
+                            FallingNumber = 250,
+                        },
+                        Quantity = "1000t",
                     },
                     DeliveryInfo = new DeliveryInfo
                     {
                         DeliveryParity = ParityType.FCA,
-                        LocationDetail = "Cityname+20km"
+                        LocationDetail = "Nitra+25km"
                     },
                     Price = 200,
-                    Currency = "Euro",
-                    Date = new DateTime(2024, 10, 7),
-                    Notes = "New Crop" 
-                }
-                };
+                    Currency = "Euro/t",
+                    Date = "1-3",
+                    GMP = GMP.NonGMP,
+                    ISCC = ISCC.NonISCC,
+                    PublicNotes = "crop 26, prepayment, moldy smell...",
+                    PrivateNotes = "Oponice",
 
-                new TradeEntry
+            })
+        };
+
+            new TradeEntry
+            {
+                TradeDirection = TradeDirectionType.Demand,
+                Company = new Company { CompanyName = "Agrolife" },
+                Product = new Product
                 {
-                    TradeDirection = TradeDirectionType.Demand,
-                    Company = new Company { CompanyName = "Agrolife" },                    
-                    Product = new Product
+                    ProductName = "Wheat",
+                    ProductQuality = new ProductQuality
                     {
-                        ProductName = "Barley",
-                        ProductQuality = new ProductQuality
-                        {
-                            Protein = 13f,
-                            Weight = 1000,
-                            FallingNumber = 1000,
-                        }
+                        Protein = 13,
+                        TestWeight = 78,
+                        FallingNumber = 250,
                     },
-                    DeliveryInfo = new DeliveryInfo
-                    {
-                        DeliveryParity = ParityType.FCA,
-                        LocationDetail = "Cityname+20km"
-                    },
-                    Price = 200,
-                    Currency = "Euro",
-                    Date = new DateTime(7 - 10 / 24),
-                    Notes = "New Crop"
-                };
-            }
+                    Quantity = "1000t",
+                },
+                DeliveryInfo = new DeliveryInfo
+                {
+                    DeliveryParity = ParityType.FCA,
+                    LocationDetail = "West SK+20km"
+                },
+                Price = 200,
+                Currency = "Euro/t",
+                Date = "1-3",
+                GMP = GMP.NonGMP,
+                ISCC = ISCC.NonISCC,
+                PublicNotes = "Crop 26, Buyers Call",
+                PrivateNotes = "Comission Buyer 1Euro",
+            };
         }
     }
+}
 

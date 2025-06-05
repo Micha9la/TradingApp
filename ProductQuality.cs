@@ -76,9 +76,10 @@ namespace TradingApp
 			get { return _don; }
 			set { _don = value; }
 		}
-		private int _afla;
 
-		public int MyProperty
+		//unti: ppb
+		private int _afla;
+		public int Afla
 		{
 			get { return _afla; }
 			set { _afla = value; }
