@@ -58,8 +58,8 @@ namespace TradingApp
 			set { _currency = value; }
 		}
 		//not visible to customers
-		private string _date;
-		public string Date
+		private DateTime _date;
+		public DateTime Date
 		{
 			get { return _date; }
 			set { _date = value; }

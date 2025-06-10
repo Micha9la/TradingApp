@@ -33,7 +33,7 @@ namespace TradingApp
                             TestWeight = 78,
                             FallingNumber = 250,
                         },
-                        Quantity = "1000t",
+                        Quantity = 1000,
                     },
                     DeliveryInfo = new DeliveryInfo
                     {
@@ -42,7 +42,7 @@ namespace TradingApp
                     },
                     Price = 200,
                     Currency = "Euro/t",
-                    Date = "1-3",
+                    Date = new DateTime(2025, 8, 21),
                     GMP = GMP.NonGMP,
                     ISCC = ISCC.NonISCC,
                     PublicNotes = "crop 26, prepayment, moldy smell...",
@@ -64,7 +64,7 @@ namespace TradingApp
                         TestWeight = 78,
                         FallingNumber = 250,
                     },
-                    Quantity = "1000t",
+                    Quantity = 1000,
                 },
                 DeliveryInfo = new DeliveryInfo
                 {
@@ -73,7 +73,7 @@ namespace TradingApp
                 },
                 Price = 200,
                 Currency = "Euro/t",
-                Date = "1-3",
+                Date = new DateTime(2025, 8, 21),
                 GMP = GMP.NonGMP,
                 ISCC = ISCC.NonISCC,
                 PublicNotes = "Crop 26, Buyers Call",
