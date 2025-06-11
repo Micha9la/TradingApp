@@ -1,0 +1,30 @@
+﻿@page "/landingpage"
+@using BlazorAppTrading.Pages
+
+<h1>Welcome to the Trading App</h1>
+
+<p>Select an action to get started:</p>
+
+<div class="button-container">
+    <button class="btn btn-primary" @onclick="ShowOffer">Offer</button>
+    <button class="btn btn-secondary" @onclick="ShowDemand">Demand</button>
+</div>
+
+
+
+@code {
+    private string? message;
+
+    private void ShowOffer()
+    {
+        message = "You clicked Offer!";
+        // Later- navigate to Offer page or show offers
+    }
+
+    private void ShowDemand()
+    {
+        message = "You clicked Demand!";
+        // Later- navigate to Demand page or show demands
+    }
+}
+
