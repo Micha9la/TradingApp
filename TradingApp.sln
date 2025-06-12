@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingApp", "TradingApp\TradingApp.csproj", "{172326AA-663C-450D-B98B-A43B83601FB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppTrading", "BlazorApp1\BlazorAppTrading.csproj", "{56A0705E-8B8C-4F07-A985-2CF5FF22BE6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingApp.BlazorUI", "TradingApp.BlazorUI\TradingApp.BlazorUI.csproj", "{811189E6-6A72-4BEB-B95B-987409168252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{172326AA-663C-450D-B98B-A43B83601FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{172326AA-663C-450D-B98B-A43B83601FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{172326AA-663C-450D-B98B-A43B83601FB5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56A0705E-8B8C-4F07-A985-2CF5FF22BE6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56A0705E-8B8C-4F07-A985-2CF5FF22BE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56A0705E-8B8C-4F07-A985-2CF5FF22BE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56A0705E-8B8C-4F07-A985-2CF5FF22BE6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{811189E6-6A72-4BEB-B95B-987409168252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{811189E6-6A72-4BEB-B95B-987409168252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{811189E6-6A72-4BEB-B95B-987409168252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{811189E6-6A72-4BEB-B95B-987409168252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
