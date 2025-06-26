@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TradingApp.BlazorUI.Components;
 using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
+using TradingApp.BlazorUI.Services;
 
 namespace TradingApp.BlazorUI
 {
@@ -40,6 +41,8 @@ namespace TradingApp.BlazorUI
                 .AddDefaultTokenProviders();
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+            builder.Services.AddSingleton<ITradeService, InMemoryTradeService>();
 
             var app = builder.Build();
 

@@ -1,33 +1,26 @@
 ﻿@page "/landingpage"
-@using TradingApp.BlazorUI.Components
+@inject NavigationManager Navigation
 
 <h1>Welcome to the Trading App</h1>
 
 <p>Select an action to get started:</p>
 
-<div class="button-container">
-    <button class="btn btn-primary" @onclick="ShowOffer">Offer</button>
-    <button class="btn btn-secondary" @onclick="ShowDemand">Demand</button>
+<div class="d-flex flex-column align-items-center gap-3 mt-4">
+    <button class="btn btn-success btn-lg w-75" @onclick="() => NavigateToForm(true)">Offer</button>
+    <button class="btn btn-primary btn-lg w-75" @onclick="() => NavigateToForm(false)">Demand</button>
+    <button class="btn btn-secondary btn-lg w-75" @onclick="NavigateToMenu">Menu</button>
 </div>
 
-@if (message != null)
-{
-    <p class="mt-3 alert alert-info">@message</p>
-}
-
-
 @code {
-    private string? message;
-
-    private void ShowOffer()
+    private void NavigateToForm(bool isOffer)
     {
-        message = "You clicked Offer!";
-        // Later- navigate to Offer page or show offers
+        Navigation.NavigateTo($"/tradeform/{isOffer}");
     }
 
-    private void ShowDemand()
+    private void NavigateToMenu()
     {
-        message = "You clicked Demand!";
-        // Later- navigate to Demand page or show demands
+        Navigation.NavigateTo("/menu");
     }
 }
+
+
