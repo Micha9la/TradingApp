@@ -8,7 +8,7 @@ namespace TradingApp
 {
     public class TradeEntry
     {
-        
+        public int Id { get; set; }
         //catalog number can start from 1. every TradeEntry gets a number!!
         private int _catalogNumber;
         public int CatalogNumber

@@ -8,7 +8,8 @@ namespace TradingApp
 {
     public class Company
     {
-		private string _companyName;
+        public int Id { get; set; }
+        private string _companyName;
 
 		public string CompanyName
 		{

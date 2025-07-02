@@ -8,7 +8,8 @@ namespace TradingApp
 {
     public class Product
     {
-		private string _productName;
+        public int Id { get; set; }
+        private string _productName;
 
 		public string ProductName
 		{

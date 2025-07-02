@@ -8,8 +8,9 @@ namespace TradingApp
 {
     public class ProductQuality
     {
-		//percentige 11,1% (drop down menu with suggestions)
-		private float _proteinPercentage;
+        public int Id { get; set; }
+        //percentige 11,1% (drop down menu with suggestions)
+        private float _proteinPercentage;
 		public float Protein
 		{
 			get { return _proteinPercentage; }
