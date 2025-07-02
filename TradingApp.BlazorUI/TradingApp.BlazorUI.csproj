@@ -18,4 +18,10 @@
     <ProjectReference Include="..\TradingApp\TradingApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\TradeData.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
