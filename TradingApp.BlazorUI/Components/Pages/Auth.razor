@@ -1,5 +1,6 @@
 ﻿@page "/auth"
 
+@using TradingApp.BlazorUI.Data
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -22,3 +23,15 @@
         <p>No: You are not authorized!</p>
     </NotAuthorized>
 </AuthorizeView>
+
+@code
+{
+    async void Test()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claims = authState.User;
+        var currentUser = await UserManager.GetUserAsync(claims);
+
+        currentUser.FavouriteColor = "red";
+    }
+}

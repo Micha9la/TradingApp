@@ -43,6 +43,7 @@ namespace TradingApp.BlazorUI
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
             builder.Services.AddSingleton<ITradeService, InMemoryTradeService>();
+            builder.Services.AddScoped<TradeDbService>();
 
             var app = builder.Build();
 
