@@ -45,6 +45,7 @@ namespace TradingApp.BlazorUI
             builder.Services.AddSingleton<ITradeService, InMemoryTradeService>();
             builder.Services.AddScoped<TradeDbService>();
             builder.Services.AddScoped<ITradeService, EFTradeService>();
+            builder.Services.AddScoped<CsvTradeImporter>();
 
 
             var app = builder.Build();
