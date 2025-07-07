@@ -1,0 +1,53 @@
+﻿@page "/trades" //URL for the page
+@using TradingApp.BlazorUI.Services
+@inject ITradeService TradeService
+@inject CsvTradeImporter Importer
+
+
+<h3>Imported Trades</h3>
+
+@if (trades == null)
+{
+    <p>Loading...</p>
+}
+else if (!trades.Any())
+{
+    <p>No trades found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Product</th>
+                <th>Quantity (t)</th>
+                <th>Price</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var trade in trades)
+            {
+                <tr>
+                    <td>@trade.Company?.CompanyName</td>
+                    <td>@trade.Product?.ProductName</td>
+                    <td>@trade.Product?.Quantity</td>
+                    <td>@trade.Price</td>
+                    <td>@trade.Date.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    
+    private List<TradeEntry>? trades;
+
+    protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
+    {
+        await Importer.ImportAsync(); // Import from CSV each time this page loads
+        trades = await TradeService.GetAllTradesAsync(); //Calls EF-based data service to load data from the database.
+    }
+}

@@ -1,20 +1,25 @@
-﻿using System.Formats.Asn1;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using TradingApp;
+using TradingApp.BlazorUI.Data;
 
 namespace TradingApp.BlazorUI.Services
 {
     public class CsvTradeImporter
     {
-        private readonly EFTradeService _tradeService;
+        private readonly ApplicationDbContext _context;
 
-        public CsvTradeImporter(EFTradeService tradeService)
+        public CsvTradeImporter(ApplicationDbContext context)
         {
-            _tradeService = tradeService;
+            _context = context;
+        }
+
+        public async Task ImportAsync()
+        {
+            // actual CSV import logic
         }
 
         public async Task ImportTradesFromCsv(string filePath)
@@ -33,7 +38,7 @@ namespace TradingApp.BlazorUI.Services
             foreach (var record in records)
             {
                 var trade = new TradeEntry
-                {
+                {                   
                     CatalogNumber = record.CatalogNumber,
                     TradeDirection = Enum.Parse<TradeDirectionType>(record.TradeDirection),
                     Company = new Company { CompanyName = record.CompanyName },
@@ -61,9 +66,9 @@ namespace TradingApp.BlazorUI.Services
                     PublicNotes = record.PublicNotes,
                     PrivateNotes = record.PrivateNotes
                 };
-
-                await _tradeService.AddTradeAsync(trade);
+                _context.TradeEntries.Add(trade);
             }
+            await _context.SaveChangesAsync();
         }
     }
 }
