@@ -1,7 +1,9 @@
-﻿@page "/trades" //URL for the page
+﻿@page "/trades"
 @using TradingApp.BlazorUI.Services
 @inject ITradeService TradeService
 @inject CsvTradeImporter Importer
+@inject IWebHostEnvironment Env
+
 
 
 <h3>Imported Trades</h3>
@@ -47,7 +49,8 @@ else
 
     protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
     {
-        await Importer.ImportAsync(); // Import from CSV each time this page loads
+        var csvPath = Path.Combine(Env.WebRootPath, "TradeData.csv");
+        await Importer.ImportTradesFromCsv(csvPath);
         trades = await TradeService.GetAllTradesAsync(); //Calls EF-based data service to load data from the database.
     }
 }
