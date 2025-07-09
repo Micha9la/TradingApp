@@ -17,10 +17,10 @@ namespace TradingApp.BlazorUI.Services
             _context = context;
         }
 
-        public async Task ImportAsync()
-        {
+        //public async Task ImportAsync()
+        //{
             // actual CSV import logic
-        }
+        //}
 
         public async Task ImportTradesFromCsv(string filePath)
         {
@@ -37,10 +37,20 @@ namespace TradingApp.BlazorUI.Services
 
             foreach (var record in records)
             {
+                if (_context.TradeEntries.Any(t => t.CatalogNumber == record.CatalogNumber))
+                    continue;
+
+                Enum.TryParse<TradeDirectionType>(record.TradeDirection, out var tradeDirection);
+                Enum.TryParse<ParityType>(record.DeliveryParity, out var parity);
+                Enum.TryParse<GMP>(record.GMP, out var gmp);
+                Enum.TryParse<ISCC>(record.ISCC, out var iscc);
+                DateTime.TryParse(record.Date, out var parsedDate);
+
                 var trade = new TradeEntry
                 {                   
                     CatalogNumber = record.CatalogNumber,
-                    TradeDirection = Enum.Parse<TradeDirectionType>(record.TradeDirection),
+                    TradeDirection = tradeDirection,
+
                     Company = new Company { CompanyName = record.CompanyName },
                     Product = new Product
                     {
@@ -50,19 +60,24 @@ namespace TradingApp.BlazorUI.Services
                         {
                             Protein = record.Protein,
                             TestWeight = record.TestWeight,
-                            FallingNumber = record.FallingNumber
+                            FallingNumber = record.FallingNumber,
+                            Glassiness = record.Glassiness,
+                            OilContent = record.OilContent,
+                            DamagedKernels = record.DamagedKernels,
+                            Don = record.Don,
+                            Afla = record.Afla
                         }
                     },
                     DeliveryInfo = new DeliveryInfo
                     {
-                        DeliveryParity = Enum.Parse<ParityType>(record.Parity),
+                        DeliveryParity = Enum.Parse<ParityType>(record.DeliveryParity),
                         LocationDetail = record.LocationDetail
                     },
                     Price = record.Price,
                     Currency = record.Currency,
-                    Date = DateTime.Parse(record.Date),
-                    GMP = Enum.Parse<GMP>(record.GMP),
-                    ISCC = Enum.Parse<ISCC>(record.ISCC),
+                    Date = parsedDate,
+                    GMP = gmp,
+                    ISCC = iscc,
                     PublicNotes = record.PublicNotes,
                     PrivateNotes = record.PrivateNotes
                 };

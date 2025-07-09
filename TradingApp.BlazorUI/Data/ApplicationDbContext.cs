@@ -11,7 +11,7 @@ namespace TradingApp.BlazorUI.Data
         {
         }
 
-        public DbSet<TradeEntry> TradeEntries { get; set; }
+        public DbSet<TradeEntry> TradeEntries { get; set; } //DbSet<TradeEntry> maps to a table called TradeEntries
         public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductQuality> ProductQualities { get; set; }

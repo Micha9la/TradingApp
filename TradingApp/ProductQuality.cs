@@ -41,19 +41,6 @@ namespace TradingApp
 			set { _glassiness = value; }
 		}
 
-		private int _gmp;
-		public int GMP
-		{
-			get { return _gmp; }
-			set { _gmp = value; }
-		}
-
-		private int _ISCC;
-		public int ISCC
-		{
-			get { return _ISCC; }
-			set { _ISCC = value; }
-		}
         //%
         private int _oilContent;
         public int OilContent

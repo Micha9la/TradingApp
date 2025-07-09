@@ -5,7 +5,6 @@
 @inject IWebHostEnvironment Env
 
 
-
 <h3>Imported Trades</h3>
 
 @if (trades == null)
@@ -45,7 +44,7 @@ else
 
 @code {
     
-    private List<TradeEntry>? trades;
+    private List<TradeEntry> trades;
 
     protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
     {
