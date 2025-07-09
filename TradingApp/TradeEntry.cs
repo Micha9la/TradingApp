@@ -93,11 +93,11 @@ namespace TradingApp
 		}
 
 		//visible to customer, part of message to customer. crop year
-        private string _publicNotes;
-        public string PublicNotes
+        private string _records;
+        public string Records
         {
-            get { return _publicNotes; }
-            set { _publicNotes = value; }
+            get { return _records; }
+            set { _records = value; }
         }
     }
 }

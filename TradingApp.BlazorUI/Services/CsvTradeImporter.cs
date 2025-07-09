@@ -27,7 +27,10 @@ namespace TradingApp.BlazorUI.Services
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HeaderValidated = null,
-                MissingFieldFound = null
+                MissingFieldFound = null,
+                IgnoreBlankLines = true,
+                BadDataFound = null,
+                TrimOptions = TrimOptions.Trim
             };
 
             using var reader = new StreamReader(filePath);
@@ -48,24 +51,24 @@ namespace TradingApp.BlazorUI.Services
 
                 var trade = new TradeEntry
                 {                   
-                    CatalogNumber = record.CatalogNumber,
+                    CatalogNumber = record.CatalogNumber ?? 0,
                     TradeDirection = tradeDirection,
 
                     Company = new Company { CompanyName = record.CompanyName },
                     Product = new Product
                     {
                         ProductName = record.ProductName,
-                        Quantity = record.Quantity,
+                        Quantity = record.Quantity ?? 0,
                         ProductQuality = new ProductQuality
                         {
-                            Protein = record.Protein,
-                            TestWeight = record.TestWeight,
-                            FallingNumber = record.FallingNumber,
-                            Glassiness = record.Glassiness,
-                            OilContent = record.OilContent,
-                            DamagedKernels = record.DamagedKernels,
-                            Don = record.Don,
-                            Afla = record.Afla
+                            Protein = record.Protein ?? 0,
+                            TestWeight = record.TestWeight ?? 0,
+                            FallingNumber = record.FallingNumber ?? 0,
+                            Glassiness = record.Glassiness ?? 0,
+                            OilContent = record.OilContent ?? 0,
+                            DamagedKernels = record.DamagedKernels ?? 0,
+                            Don = record.Don ?? 0,
+                            Afla = record.Afla ?? 0
                         }
                     },
                     DeliveryInfo = new DeliveryInfo
@@ -73,12 +76,12 @@ namespace TradingApp.BlazorUI.Services
                         DeliveryParity = Enum.Parse<ParityType>(record.DeliveryParity),
                         LocationDetail = record.LocationDetail
                     },
-                    Price = record.Price,
+                    Price = record.Price ?? 0,
                     Currency = record.Currency,
                     Date = parsedDate,
                     GMP = gmp,
                     ISCC = iscc,
-                    PublicNotes = record.PublicNotes,
+                    Records = record.Records,
                     PrivateNotes = record.PrivateNotes
                 };
                 _context.TradeEntries.Add(trade);

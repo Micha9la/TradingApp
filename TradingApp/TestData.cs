@@ -45,7 +45,7 @@ namespace TradingApp
                     Date = new DateTime(2025, 8, 21),
                     GMP = GMP.NonGMP,
                     ISCC = ISCC.NonISCC,
-                    PublicNotes = "crop 26, prepayment, moldy smell...",
+                    Records = "crop 26, prepayment, moldy smell...",
                     PrivateNotes = "Oponice",
 
             })
@@ -76,7 +76,7 @@ namespace TradingApp
                 Date = new DateTime(2025, 8, 21),
                 GMP = GMP.NonGMP,
                 ISCC = ISCC.NonISCC,
-                PublicNotes = "Crop 26, Buyers Call",
+                Records = "Crop 26, Buyers Call",
                 PrivateNotes = "Comission Buyer 1Euro",
             };
         }
