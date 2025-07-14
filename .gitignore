@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ignore all .json files in any credentials folder — private key won’t get committed to GitHub by mistake
+**/credentials/*.json
