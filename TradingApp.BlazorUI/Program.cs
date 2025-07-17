@@ -45,7 +45,7 @@ namespace TradingApp.BlazorUI
             //builder.Services.AddSingleton<ITradeService, InMemoryTradeService>();
             builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
             builder.Services.AddScoped<CsvTradeImporter>();
-
+            builder.Services.AddScoped<GoogleSheetTradeSyncService>();
 
             var app = builder.Build();
 

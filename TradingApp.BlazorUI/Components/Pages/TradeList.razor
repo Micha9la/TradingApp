@@ -3,6 +3,8 @@
 @inject ITradeService TradeService
 @inject CsvTradeImporter Importer
 @inject IWebHostEnvironment Env
+@inject GoogleSheetTradeSyncService GoogleSheetService
+
 
 
 <h3>Imported Trades</h3>
@@ -20,17 +22,19 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Catalog</th>
+                <th>Date</th>
                 <th>Company</th>
                 <th>Product</th>
                 <th>Quantity (t)</th>
-                <th>Price</th>
-                <th>Date</th>
+                <th>Price</th>                
             </tr>
         </thead>
         <tbody>
-            @foreach (var trade in trades)
+            @foreach (var trade in trades.Where(t => t != null))
             {
                 <tr>
+                    <td>@trade.CatalogNumber</td>
                     <td>@trade.Company?.CompanyName</td>
                     <td>@trade.Product?.ProductName</td>
                     <td>@trade.Product?.Quantity</td>
@@ -42,14 +46,72 @@ else
     </table>
 }
 
+<button @onclick="AppendTestTrade">Add Test Trade</button>
+
 @code {
     
-    private List<TradeEntry> trades;
+    //private List<TradeEntry> trades;
 
-    protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
+    //protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
+    //{
+     //   var csvPath = Path.Combine(Env.WebRootPath, "TradeData.csv");
+     //   await Importer.ImportTradesFromCsv(csvPath);
+     //   trades = await TradeService.GetAllTradesAsync(); //Calls EF-based data service to load data from the database.
+    //}
+
+    //Add a List<TradeEntry> to display trades
+    private List<TradeEntry> trades = new();
+    //Load data from Google Sheets on page load
+    protected override async Task OnInitializedAsync()
     {
-        var csvPath = Path.Combine(Env.WebRootPath, "TradeData.csv");
-        await Importer.ImportTradesFromCsv(csvPath);
-        trades = await TradeService.GetAllTradesAsync(); //Calls EF-based data service to load data from the database.
+        trades = await GoogleSheetService.ReadTradesAsync();
+    }
+
+    private async Task AppendTestTrade()
+    {
+        var testTrade = new TradeEntry
+        {
+            CatalogNumber = 999,
+            Date = DateTime.Now,
+            TradeDirection = TradeDirectionType.Offer,
+            Product = new Product
+            {
+                ProductName = "Test Product",
+                Quantity = 100,
+                ProductQuality = new ProductQuality
+                {
+                    Protein = 13.5f,
+                    TestWeight = 78,
+                    FallingNumber = 300,
+                    Glassiness = 0,
+                    OilContent = 0,
+                    DamagedKernels = 0,
+                    Don = 0,
+                    Afla = 0
+                }
+            },
+            Company = new Company
+            {
+                CompanyName = "Test Co",
+                ContactPerson = "Test Person"
+            },
+            DeliveryInfo = new DeliveryInfo
+            {
+                DeliveryParity = ParityType.FCA,
+                LocationDetail = "Test Location"
+            },
+            Price = 250,
+            Currency = "EUR",
+            GMP = GMP.NonGMP,
+            ISCC = ISCC.NonISCC,
+            Records = "Test record",
+            PrivateNotes = "Some notes"
+        };
+
+        await GoogleSheetService.AppendTradeAsync(testTrade);
+
+        // Optionally reload data
+        trades = await GoogleSheetService.ReadTradesAsync();
     }
 }
+

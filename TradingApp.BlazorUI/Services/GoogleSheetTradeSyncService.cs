@@ -107,12 +107,31 @@ namespace TradingApp.BlazorUI.Services
                 return null;
 
             try
-            {
+            {// TryParse with fallback to default values
+                int.TryParse(row[0]?.ToString(), out var catalog);
+                DateTime.TryParse(row[1]?.ToString(), out var date);
+                Enum.TryParse<TradeDirectionType>(row[2]?.ToString(), true, out var direction);
+
+                float.TryParse(row[7]?.ToString(), out var protein);
+                int.TryParse(row[8]?.ToString(), out var testWeight);
+                int.TryParse(row[9]?.ToString(), out var falling);
+                int.TryParse(row.ElementAtOrDefault(10)?.ToString(), out var glassiness);
+                int.TryParse(row.ElementAtOrDefault(11)?.ToString(), out var oilContent);
+                int.TryParse(row.ElementAtOrDefault(12)?.ToString(), out var damagedKernels);
+                int.TryParse(row.ElementAtOrDefault(13)?.ToString(), out var don);
+                int.TryParse(row.ElementAtOrDefault(14)?.ToString(), out var afla);
+                float.TryParse(row.ElementAtOrDefault(6)?.ToString(), out var quantity);
+                decimal.TryParse(row.ElementAtOrDefault(17)?.ToString(), out var price);
+
+                Enum.TryParse<ParityType>(row.ElementAtOrDefault(15)?.ToString(), true, out var parity);
+                Enum.TryParse<GMP>(row.ElementAtOrDefault(19)?.ToString(), true, out var gmp);
+                Enum.TryParse<ISCC>(row.ElementAtOrDefault(20)?.ToString(), true, out var iscc);
+
                 return new TradeEntry
                 {
-                    CatalogNumber = int.TryParse(row[0]?.ToString(), out var catalog) ? catalog : 0,
-                    Date = DateTime.TryParse(row[1]?.ToString(), out var date) ? date : DateTime.MinValue,
-                    TradeDirection = Enum.TryParse<TradeDirectionType>(row[2]?.ToString(), true, out var direction) ? direction : TradeDirectionType.Offer,
+                    CatalogNumber = catalog,
+                    Date = date == DateTime.MinValue ? DateTime.Now : date,
+                    TradeDirection = direction,
 
                     Company = new Company
                     {
@@ -122,42 +141,41 @@ namespace TradingApp.BlazorUI.Services
 
                     Product = new Product
                     {
-                        ProductName = row[3]?.ToString() ?? string.Empty,
-                        Quantity = float.TryParse(row[6]?.ToString(), out var quantity) ? quantity : 0,
+                        ProductName = row.ElementAtOrDefault(3)?.ToString() ?? string.Empty,
+                        Quantity = quantity,
                         ProductQuality = new ProductQuality
                         {
-                            Protein = float.TryParse(row[7]?.ToString(), out var protein) ? protein : 0,
-                            TestWeight = int.TryParse(row[8]?.ToString(), out var weight) ? weight : 0,
-                            FallingNumber = int.TryParse(row[9]?.ToString(), out var falling) ? falling : 0,
-                            Glassiness = int.TryParse(row[10]?.ToString(), out var glassiness) ? glassiness : 0,
-                            OilContent = int.TryParse(row[11]?.ToString(), out var oil) ? oil : 0,
-                            DamagedKernels = int.TryParse(row[12]?.ToString(), out var damaged) ? damaged : 0,
-                            Don = int.TryParse(row[13]?.ToString(), out var don) ? don : 0,
-                            Afla = int.TryParse(row[14]?.ToString(), out var afla) ? afla : 0
+                            Protein = protein,
+                            TestWeight = testWeight,
+                            FallingNumber = falling,
+                            Glassiness = glassiness,
+                            OilContent = oilContent,
+                            DamagedKernels = damagedKernels,
+                            Don = don,
+                            Afla = afla
                         }
                     },
                     
                     DeliveryInfo = new DeliveryInfo
                     {
-                        DeliveryParity = Enum.TryParse<ParityType>(row[15]?.ToString(), true, out var parity) ? parity : ParityType.FCA,
-                        LocationDetail = row[16]?.ToString() ?? string.Empty
+                        DeliveryParity = parity,
+                        LocationDetail = row.ElementAtOrDefault(16)?.ToString() ?? ""
                     },
 
-                    Price = decimal.TryParse(row[17]?.ToString(), out var price) ? price : 0m, //0m is the default value for a decimal (m = money/literal decimal)
-                    Currency = row[18]?.ToString() ?? "EUR",
-                    GMP = Enum.TryParse<GMP>(row[19]?.ToString(), true, out var gmp) ? gmp : GMP.NonGMP,
-                    ISCC = Enum.TryParse<ISCC>(row[20]?.ToString(), true, out var iscc) ? iscc : ISCC.NonISCC,
-
-                    Records = row[21]?.ToString() ?? string.Empty,
-                    PrivateNotes = row[22]?.ToString() ?? string.Empty
+                    Price = price,
+                    Currency = row.ElementAtOrDefault(19)?.ToString() ?? "EUR",
+                    GMP = gmp,
+                    ISCC = iscc,
+                    Records = row.ElementAtOrDefault(22)?.ToString() ?? "",
+                    PrivateNotes = row.ElementAtOrDefault(23)?.ToString() ?? ""
                 };
             }
             //If any error occurs while creating the TradeEntry (e.g., bad formatting, missing fields), this catch will run.
             catch (Exception error)
             {
-                Console.WriteLine($"Failed to map row to TradeEntry. Row content: {string.Join(", ", row)}");
+                Console.WriteLine($"Failed to map row to TradeEntry. Row: {string.Join(", ", row)}");
                 Console.WriteLine($"Error: {error.Message}");
-                return null; // skip this row and continue
+                return null;
             }
         }
     }
