@@ -22,12 +22,36 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Catalog</th>
+                <th>Catalog #</th>
                 <th>Date</th>
+                <th>Direction</th>
+
+                <th>Product Name</th>
+                <th>Quantity</th>
+
+                <th>Protein (%)</th>
+                <th>Test Weight</th>
+                <th>Falling #</th>
+                <th>Glassiness</th>
+                <th>Oil Content</th>
+                <th>Damaged Kernels</th>
+                <th>DON</th>
+                <th>AFLA</th>
+
                 <th>Company</th>
-                <th>Product</th>
-                <th>Quantity (t)</th>
-                <th>Price</th>                
+                <th>Contact</th>
+
+                <th>Delivery Parity</th>
+                <th>Location</th>
+
+                <th>Price</th>
+                <th>Currency</th>
+
+                <th>GMP</th>
+                <th>ISCC</th>
+
+                <th>Records</th>
+                <th>Notes</th>
             </tr>
         </thead>
         <tbody>
@@ -35,11 +59,35 @@ else
             {
                 <tr>
                     <td>@trade.CatalogNumber</td>
-                    <td>@trade.Company?.CompanyName</td>
-                    <td>@trade.Product?.ProductName</td>
-                    <td>@trade.Product?.Quantity</td>
-                    <td>@trade.Price</td>
                     <td>@trade.Date.ToShortDateString()</td>
+                    <td>@trade.TradeDirection</td>
+
+                    <td>@trade.Company?.CompanyName</td>
+                    <td>@trade.Company?.ContactPerson</td>
+
+                    <td>@trade.Product?.ProductName</td>                    
+                    <td>@trade.Product?.Quantity</td>
+
+                    <td>@trade.Product?.ProductQuality.Protein</td>
+                    <td>@trade.Product?.ProductQuality.TestWeight</td>
+                    <td>@trade.Product?.ProductQuality.FallingNumber</td>
+                    <td>@trade.Product?.ProductQuality.Glassiness</td>
+                    <td>@trade.Product?.ProductQuality.OilContent</td>
+                    <td>@trade.Product?.ProductQuality.DamagedKernels</td>
+                    <td>@trade.Product?.ProductQuality.Don</td>
+                    <td>@trade.Product?.ProductQuality.Afla</td>
+
+                    <td>@trade.DeliveryInfo?.DeliveryParity</td>
+                    <td>@trade.DeliveryInfo?.LocationDetail</td>
+
+                    <td>@trade.Price</td>
+                    <td>@trade.Currency</td>
+
+                    <td>@trade.GMP</td>
+                    <td>@trade.ISCC</td>
+
+                    <td>@trade.Records</td>
+                    <td>@trade.PrivateNotes</td>
                 </tr>
             }
         </tbody>
