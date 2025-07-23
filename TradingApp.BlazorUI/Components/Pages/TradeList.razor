@@ -19,80 +19,40 @@ else if (!trades.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Catalog #</th>
-                <th>Date</th>
-                <th>Direction</th>
+    <QuickGrid TGridItem="TradeEntry" Items="trades">
+        <PropertyColumn Property="@(t => t.CatalogNumber)" Title="Catalog #" />
+        <PropertyColumn Property="@(t => t.Date)" Title="Date" Format="d" />
+        <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
 
-                <th>Product Name</th>
-                <th>Quantity</th>
+        <PropertyColumn Property="@(t => t.Company.CompanyName)" Title="Company" />
+        <PropertyColumn Property="@(t => t.Company.ContactPerson)" Title="Contact" />
 
-                <th>Protein (%)</th>
-                <th>Test Weight</th>
-                <th>Falling #</th>
-                <th>Glassiness</th>
-                <th>Oil Content</th>
-                <th>Damaged Kernels</th>
-                <th>DON</th>
-                <th>AFLA</th>
+        <PropertyColumn Property="@(t => t.Product.ProductName)" Title="Product" />
+        <PropertyColumn Property="@(t => t.Product.Quantity)" Title="Quantity (t)" />
 
-                <th>Company</th>
-                <th>Contact</th>
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.Protein)" Title="Protein" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.TestWeight)" Title="Test Weight" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.FallingNumber)" Title="Falling Number" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.Glassiness)" Title="Glassiness" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.OilContent)" Title="Oil Content" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.DamagedKernels)" Title="Damaged Kernels" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.Don)" Title="Don" />
+        <PropertyColumn Property="@(t => t.Product.ProductQuality.Afla)" Title="Afla" />
 
-                <th>Delivery Parity</th>
-                <th>Location</th>
+        <PropertyColumn Property="@(t => t.DeliveryInfo.DeliveryParity)" Title="Parity" />
+        <PropertyColumn Property="@(t => t.DeliveryInfo.LocationDetail)" Title="Location" />
 
-                <th>Price</th>
-                <th>Currency</th>
+        <PropertyColumn Property="@(t => t.Price)" Title="Price" Format="0.00" />
+        <PropertyColumn Property="@(t => t.Currency)" Title="Currency" />
 
-                <th>GMP</th>
-                <th>ISCC</th>
+        <PropertyColumn Property="@(t => t.GMP)" Title="GMP" />
+        <PropertyColumn Property="@(t => t.ISCC)" Title="ISCC" />
 
-                <th>Records</th>
-                <th>Notes</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var trade in trades.Where(t => t != null))
-            {
-                <tr>
-                    <td>@trade.CatalogNumber</td>
-                    <td>@trade.Date.ToShortDateString()</td>
-                    <td>@trade.TradeDirection</td>
-
-                    <td>@trade.Company?.CompanyName</td>
-                    <td>@trade.Company?.ContactPerson</td>
-
-                    <td>@trade.Product?.ProductName</td>                    
-                    <td>@trade.Product?.Quantity</td>
-
-                    <td>@trade.Product?.ProductQuality.Protein</td>
-                    <td>@trade.Product?.ProductQuality.TestWeight</td>
-                    <td>@trade.Product?.ProductQuality.FallingNumber</td>
-                    <td>@trade.Product?.ProductQuality.Glassiness</td>
-                    <td>@trade.Product?.ProductQuality.OilContent</td>
-                    <td>@trade.Product?.ProductQuality.DamagedKernels</td>
-                    <td>@trade.Product?.ProductQuality.Don</td>
-                    <td>@trade.Product?.ProductQuality.Afla</td>
-
-                    <td>@trade.DeliveryInfo?.DeliveryParity</td>
-                    <td>@trade.DeliveryInfo?.LocationDetail</td>
-
-                    <td>@trade.Price</td>
-                    <td>@trade.Currency</td>
-
-                    <td>@trade.GMP</td>
-                    <td>@trade.ISCC</td>
-
-                    <td>@trade.Records</td>
-                    <td>@trade.PrivateNotes</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <PropertyColumn Property="@(t => t.Records)" Title="Records" />
+        <PropertyColumn Property="@(t => t.PrivateNotes)" Title="Private Notes" />
+    </QuickGrid>
 }
+
 
 <button @onclick="AppendTestTrade">Add Test Trade</button>
 
