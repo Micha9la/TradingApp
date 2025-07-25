@@ -5,8 +5,6 @@
 @inject IWebHostEnvironment Env
 @inject GoogleSheetTradeSyncService GoogleSheetService
 
-
-
 <h3>Imported Trades</h3>
 
 @if (trades == null)
@@ -19,57 +17,86 @@ else if (!trades.Any())
 }
 else
 {
-    <QuickGrid TGridItem="TradeEntry" Items="trades">
-        <PropertyColumn Property="@(t => t.CatalogNumber)" Title="Catalog #" />
-        <PropertyColumn Property="@(t => t.Date)" Title="Date" Format="d" />
-        <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
+    <QuickGrid TGridItem="TradeEntry" Items="trades.AsQueryable()">
+    <PropertyColumn Property="@(t => t.CatalogNumber)" Title="Catalog #" />
+    <PropertyColumn Property="@(t => t.Date)" Title="Date" Format="d" />
+    <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
 
-        <PropertyColumn Property="@(t => t.Company.CompanyName)" Title="Company" />
-        <PropertyColumn Property="@(t => t.Company.ContactPerson)" Title="Contact" />
+    <TemplateColumn Title="Company">
+        <Template Context="t">@t.Company?.CompanyName ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Contact">
+        <Template Context="t">@t.Company?.ContactPerson ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.Product.ProductName)" Title="Product" />
-        <PropertyColumn Property="@(t => t.Product.Quantity)" Title="Quantity (t)" />
+    <TemplateColumn Title="Product Name">
+        <Template Context="t">@t.Product?.ProductName ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Quantity">
+        <Template Context="t">@t.Product?.Quantity.ToString("0.##") ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.Protein)" Title="Protein" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.TestWeight)" Title="Test Weight" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.FallingNumber)" Title="Falling Number" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.Glassiness)" Title="Glassiness" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.OilContent)" Title="Oil Content" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.DamagedKernels)" Title="Damaged Kernels" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.Don)" Title="Don" />
-        <PropertyColumn Property="@(t => t.Product.ProductQuality.Afla)" Title="Afla" />
+    <TemplateColumn Title="Protein (%)">
+        <Template Context="t">@t.Product?.ProductQuality?.Protein.ToString("0.##") ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Test Weight">
+        <Template Context="t">@t.Product?.ProductQuality?.TestWeight.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Falling #">
+        <Template Context="t">@t.Product?.ProductQuality?.FallingNumber.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Glassiness">
+        <Template Context="t">@t.Product?.ProductQuality?.Glassiness.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Oil Content">
+        <Template Context="t">@t.Product?.ProductQuality?.OilContent.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Damaged Kernels">
+        <Template Context="t">@t.Product?.ProductQuality?.DamagedKernels.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="DON">
+        <Template Context="t">@t.Product?.ProductQuality?.Don.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="AFLA">
+        <Template Context="t">@t.Product?.ProductQuality?.Afla.ToString() ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.DeliveryInfo.DeliveryParity)" Title="Parity" />
-        <PropertyColumn Property="@(t => t.DeliveryInfo.LocationDetail)" Title="Location" />
+    <TemplateColumn Title="Delivery Parity">
+        <Template Context="t">@t.DeliveryInfo?.DeliveryParity.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Location">
+        <Template Context="t">@t.DeliveryInfo?.LocationDetail ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.Price)" Title="Price" Format="0.00" />
-        <PropertyColumn Property="@(t => t.Currency)" Title="Currency" />
+    <TemplateColumn Title="Price">
+        <Template Context="t">@t.Price.ToString("0.00")</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Currency">
+        <Template Context="t">@t.Currency ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.GMP)" Title="GMP" />
-        <PropertyColumn Property="@(t => t.ISCC)" Title="ISCC" />
+    <TemplateColumn Title="GMP">
+        <Template Context="t">@t.GMP.ToString() ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="ISCC">
+        <Template Context="t">@t.ISCC.ToString() ?? ""</Template>
+    </TemplateColumn>
 
-        <PropertyColumn Property="@(t => t.Records)" Title="Records" />
-        <PropertyColumn Property="@(t => t.PrivateNotes)" Title="Private Notes" />
-    </QuickGrid>
+    <TemplateColumn Title="Records">
+        <Template Context="t">@t.Records ?? ""</Template>
+    </TemplateColumn>
+    <TemplateColumn Title="Private Notes">
+        <Template Context="t">@t.PrivateNotes ?? ""</Template>
+    </TemplateColumn>
+</QuickGrid>
+
 }
-
 
 <button @onclick="AppendTestTrade">Add Test Trade</button>
 
 @code {
-    
-    //private List<TradeEntry> trades;
-
-    //protected override async Task OnInitializedAsync() //Runs when the page is loaded — this is where data is fetched
-    //{
-     //   var csvPath = Path.Combine(Env.WebRootPath, "TradeData.csv");
-     //   await Importer.ImportTradesFromCsv(csvPath);
-     //   trades = await TradeService.GetAllTradesAsync(); //Calls EF-based data service to load data from the database.
-    //}
-
-    //Add a List<TradeEntry> to display trades
     private List<TradeEntry> trades = new();
-    //Load data from Google Sheets on page load
+
     protected override async Task OnInitializedAsync()
     {
         trades = await GoogleSheetService.ReadTradesAsync();
@@ -117,9 +144,8 @@ else
         };
 
         await GoogleSheetService.AppendTradeAsync(testTrade);
-
-        // Optionally reload data
         trades = await GoogleSheetService.ReadTradesAsync();
     }
 }
+
 
