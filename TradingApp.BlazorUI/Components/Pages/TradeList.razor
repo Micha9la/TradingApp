@@ -4,6 +4,7 @@
 @inject CsvTradeImporter Importer
 @inject IWebHostEnvironment Env
 @inject GoogleSheetTradeSyncService GoogleSheetService
+@using TradingApp
 
 <h3>Imported Trades</h3>
 
@@ -14,81 +15,83 @@
 else if (!trades.Any())
 {
     <p>No trades found.</p>
+    <p>Total Trades: @trades?.Count</p>
+
 }
 else
-{
+{    
     <QuickGrid TGridItem="TradeEntry" Items="trades.AsQueryable()">
     <PropertyColumn Property="@(t => t.CatalogNumber)" Title="Catalog #" />
     <PropertyColumn Property="@(t => t.Date)" Title="Date" Format="d" />
     <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
 
-    <TemplateColumn Title="Company">
-        <Template Context="t">@t.Company?.CompanyName ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Contact">
-        <Template Context="t">@t.Company?.ContactPerson ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="Company">
+            @context.Company.CompanyName ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="ContactPerson">
+            @context.Company.ContactPerson ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="Product Name">
-        <Template Context="t">@t.Product?.ProductName ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Quantity">
-        <Template Context="t">@t.Product?.Quantity.ToString("0.##") ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="ProductName">
+            @context.Product.ProductName ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="Quantity">
+            @context.Product.Quantity ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="Protein (%)">
-        <Template Context="t">@t.Product?.ProductQuality?.Protein.ToString("0.##") ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Test Weight">
-        <Template Context="t">@t.Product?.ProductQuality?.TestWeight.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Falling #">
-        <Template Context="t">@t.Product?.ProductQuality?.FallingNumber.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Glassiness">
-        <Template Context="t">@t.Product?.ProductQuality?.Glassiness.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Oil Content">
-        <Template Context="t">@t.Product?.ProductQuality?.OilContent.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Damaged Kernels">
-        <Template Context="t">@t.Product?.ProductQuality?.DamagedKernels.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="DON">
-        <Template Context="t">@t.Product?.ProductQuality?.Don.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="AFLA">
-        <Template Context="t">@t.Product?.ProductQuality?.Afla.ToString() ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="Protein">
+            @context.Product.ProductQuality.Protein ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="TestWeight">
+            @context.Product.ProductQuality.TestWeight ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="FallingNumber">
+            @context.Product.ProductQuality.FallingNumber ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="Glassiness">
+            @context.Product.ProductQuality.Glassiness ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="OilContent">
+            @context.Product.ProductQuality.OilContent ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="DamagedKernels">
+            @context.Product.ProductQuality.DamagedKernels ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="Delivery Parity">
-        <Template Context="t">@t.DeliveryInfo?.DeliveryParity.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Location">
-        <Template Context="t">@t.DeliveryInfo?.LocationDetail ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="Don">
+            @context.Product.ProductQuality.Don ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="Afla">
+            @context.Product.ProductQuality.Afla ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="Price">
-        <Template Context="t">@t.Price.ToString("0.00")</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Currency">
-        <Template Context="t">@t.Currency ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="DeliveryParity">
+            @context.DeliveryInfo.DeliveryParity ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="LocationDetails">
+            @context.DeliveryInfo.LocationDetail ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="GMP">
-        <Template Context="t">@t.GMP.ToString() ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="ISCC">
-        <Template Context="t">@t.ISCC.ToString() ?? ""</Template>
-    </TemplateColumn>
+        <TemplateColumn Title="Price">
+            @context.Price ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="Currency">
+            @context.Currency ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="GMP">
+            @context.GMP ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="ISCC">
+            @context.ISCC ?? ""
+        </TemplateColumn>
 
-    <TemplateColumn Title="Records">
-        <Template Context="t">@t.Records ?? ""</Template>
-    </TemplateColumn>
-    <TemplateColumn Title="Private Notes">
-        <Template Context="t">@t.PrivateNotes ?? ""</Template>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Title="Records">
+            @context.Records ?? ""
+        </TemplateColumn>
+        <TemplateColumn Title="PrivateNotes">
+            @context.PrivateNotes ?? ""
+        </TemplateColumn>
+    </QuickGrid>
 
 }
 

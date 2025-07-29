@@ -18,7 +18,14 @@ namespace TradingApp
             get { return _catalogNumber; }
             set { _catalogNumber = value; }
         }
-		//Offer or Demand
+        //not visible to customers
+        private DateTime _date;
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; }
+        }
+        //Offer or Demand
         private TradeDirectionType _tradeDirection;
 		public  TradeDirectionType TradeDirection
 		{
@@ -60,44 +67,33 @@ namespace TradingApp
 			get { return _currency; }
 			set { _currency = value; }
 		}
-		//not visible to customers
-		private DateTime _date;
-		public DateTime Date
-		{
-			get { return _date; }
-			set { _date = value; }
-		}
+        private GMP _gmp;
+        public GMP GMP
+        {
+            get { return _gmp; }
+            set { _gmp = value; }
+        }
 
-		private ISCC _iscc;
-
+        private ISCC _iscc;
 		public ISCC ISCC
 		{
 			get { return _iscc; }
 			set { _iscc = value; }
 		}
-		private GMP _gmp;
-
-		public  GMP GMP
-		{
-			get { return _gmp; }
-			set { _gmp = value; }
-		}
-
-
-		//not visible for customers
-		private string _privateNotes;
-		public string PrivateNotes
-		{
-			get { return _privateNotes; }
-			set { _privateNotes = value; }
-		}
-
-		//visible to customer, part of message to customer. crop year
+        //visible to customer, part of message to customer. crop year
         private string _records;
         public string Records
         {
             get { return _records; }
             set { _records = value; }
         }
+
+        //not visible for customers
+        private string _privateNotes;
+		public string PrivateNotes
+		{
+			get { return _privateNotes; }
+			set { _privateNotes = value; }
+		}		
     }
 }

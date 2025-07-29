@@ -20,7 +20,8 @@ namespace TradingApp
         {
             return new List<TradeEntry>
         {
-            CreateTradeEntry(new TradeEntry
+            CreateTradeEntry(
+                new TradeEntry
             {
                     TradeDirection = TradeDirectionType.Offer,
                     Company = new Company { CompanyName = "AgroLife" },
