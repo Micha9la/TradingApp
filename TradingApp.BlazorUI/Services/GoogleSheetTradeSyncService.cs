@@ -1,4 +1,5 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using System.Diagnostics;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Http;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
@@ -61,14 +62,22 @@ namespace TradingApp.BlazorUI.Services
         //Read (Fetch rows from the sheet and convert to C#)
         public async Task<List<TradeEntry>> ReadTradesAsync()
         {
+            Console.WriteLine("GoogleSheetService: Reading trades...");
             var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{_sheetName}!A2:Z");
             var response = await request.ExecuteAsync();
-
             var trades = new List<TradeEntry>();
-            foreach (var row in response.Values)
+
+            if (response.Values != null)
             {
-                trades.Add(MapRowToTrade(row));
+                foreach (var row in response.Values)
+                {
+                    var trade = MapRowToTrade(row); // Make sure this method works properly
+                    if (trade != null)
+                        trades.Add(trade);
+                }
             }
+
+            Console.WriteLine($"GoogleSheetService: Found {trades.Count} trades.");
 
             return trades;
         }

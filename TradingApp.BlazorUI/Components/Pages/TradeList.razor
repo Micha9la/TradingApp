@@ -97,6 +97,20 @@ else
 
 <button @onclick="AppendTestTrade">Add Test Trade</button>
 
+<p>Total Trades: @trades?.Count</p>
+
+<button @onclick="TestGoogleSheetRead">Test Read</button>
+
+@code {
+    private async Task TestGoogleSheetRead()
+    {
+        trades = await GoogleSheetService.ReadTradesAsync();
+
+        Console.WriteLine($"TestRead: Found {trades?.Count ?? 0} trades");
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
 @code {
     private List<TradeEntry> trades = new();
 
