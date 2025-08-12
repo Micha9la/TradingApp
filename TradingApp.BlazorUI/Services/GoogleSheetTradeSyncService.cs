@@ -169,11 +169,12 @@ namespace TradingApp.BlazorUI.Services
                 return null;
             }
         }
+        
         private string CleanCellValue(object cell)
         {
-            var value = cell?.ToString()?.Trim().ToLowerInvariant();
+            var value = cell?.ToString()?.Trim();
 
-            if (string.IsNullOrWhiteSpace(value) || value == "-" || value == "/" || value == "n/a")
+            if (string.IsNullOrWhiteSpace(value) || value == "-" || value == "/" || value.ToLowerInvariant() == "n/a")
                 return null;
 
             return value;
