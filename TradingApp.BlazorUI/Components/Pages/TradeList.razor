@@ -5,6 +5,7 @@
 @inject IWebHostEnvironment Env
 @inject GoogleSheetTradeSyncService GoogleSheetService
 @using TradingApp
+@using TradingApp.BlazorUI.Data
 
 <h3>Imported Trades</h3>
 
@@ -26,70 +27,70 @@ else
     <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
 
         <TemplateColumn Title="Company">
-            @context.Company.CompanyName ?? ""
+            @context.Company.CompanyName.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="ContactPerson">
-            @context.Company.ContactPerson ?? ""
+            @context.Company.ContactPerson.ValueOrEmpty()
         </TemplateColumn>
 
         <TemplateColumn Title="ProductName">
-            @context.Product.ProductName ?? ""
+            @context.Product.ProductName.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="Quantity">
-            @context.Product.Quantity ?? ""
+            @context.Product.Quantity.ValueOrEmpty()
+        </TemplateColumn>
+        <TemplateColumn Title="Protein">
+            @context.Product.ProductQuality.Protein.ValueOrEmpty()
         </TemplateColumn>
 
-        <TemplateColumn Title="Protein">
-            @context.Product.ProductQuality.Protein ?? ""
-        </TemplateColumn>
         <TemplateColumn Title="TestWeight">
-            @context.Product.ProductQuality.TestWeight ?? ""
+            @context.Product.ProductQuality.TestWeight.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="FallingNumber">
-            @context.Product.ProductQuality.FallingNumber ?? ""
+            @context.Product.ProductQuality.FallingNumber.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="Glassiness">
-            @context.Product.ProductQuality.Glassiness ?? ""
+            @context.Product.ProductQuality.Glassiness.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="OilContent">
-            @context.Product.ProductQuality.OilContent ?? ""
+            @context.Product.ProductQuality.OilContent.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="DamagedKernels">
-            @context.Product.ProductQuality.DamagedKernels ?? ""
+            @context.Product.ProductQuality.DamagedKernels.ValueOrEmpty()
         </TemplateColumn>
 
         <TemplateColumn Title="Don">
-            @context.Product.ProductQuality.Don ?? ""
+            @context.Product.ProductQuality.Don.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="Afla">
-            @context.Product.ProductQuality.Afla ?? ""
+            @context.Product.ProductQuality.Afla.ValueOrEmpty()
         </TemplateColumn>
 
         <TemplateColumn Title="DeliveryParity">
-            @context.DeliveryInfo.DeliveryParity ?? ""
+            @context.DeliveryInfo.DeliveryParity.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="LocationDetails">
-            @context.DeliveryInfo.LocationDetail ?? ""
+            @context.DeliveryInfo.LocationDetail.ValueOrEmpty()
         </TemplateColumn>
 
         <TemplateColumn Title="Price">
-            @context.Price ?? ""
+            @context.Price.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="Currency">
-            @context.Currency ?? ""
+            @context.Currency.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="GMP">
-            @context.GMP ?? ""
+            @context.GMP.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="ISCC">
-            @context.ISCC ?? ""
+            @context.ISCC.ValueOrEmpty()
         </TemplateColumn>
 
         <TemplateColumn Title="Records">
-            @context.Records ?? ""
+            @context.Records.ValueOrEmpty()
         </TemplateColumn>
         <TemplateColumn Title="PrivateNotes">
-            @context.PrivateNotes ?? ""
+            @context.PrivateNotes.ValueOrEmpty()
         </TemplateColumn>
     </QuickGrid>
 
