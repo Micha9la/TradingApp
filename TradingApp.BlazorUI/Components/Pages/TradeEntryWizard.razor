@@ -1,0 +1,83 @@
+﻿@page "/trade-wizard/{direction}"
+
+@using TradingApp.BlazorUI
+@inject NavigationManager Navigation
+
+<h3>Create Trade - @direction</h3>
+
+<div class="wizard-step">
+    @if (CurrentStep == 0)
+    {
+        <label>Company Name</label>
+        <InputSelect @bind-Value="CurrentTrade.Company.CompanyName">
+            <option value="">-- Select Company --</option>
+            @foreach (var company in SortedCompanies)
+            {
+                <option value="@company">@company</option>
+            }
+        </InputSelect>
+    }
+    else if (CurrentStep == 1)
+    {
+        <label>Contact Person</label>
+        <InputSelect @bind-Value="CurrentTrade.Company.ContactPerson">
+            <option value="">-- Select Contact Person --</option>
+            @foreach (var person in SortedContactPersons)
+            {
+                <option value="@person">@person</option>
+            }
+        </InputSelect>
+    }
+    <!-- Repeat similar blocks for each property -->
+</div>
+
+<div class="wizard-buttons">
+    <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
+    <button @onclick="NextStep">Next</button>
+</div>
+
+@code {
+    [Parameter] public TradeDirectionType direction { get; set; }
+
+    private int CurrentStep { get; set; }
+    private TradeEntry CurrentTrade { get; set; } = new TradeEntry { Company = new Company(), Product = new Product { ProductQuality = new ProductQuality() }, DeliveryInfo = new DeliveryInfo() };
+
+    private List<string> SortedCompanies = new();
+    private List<string> SortedContactPersons = new();
+
+    protected override void OnInitialized()
+    {
+        SortedCompanies = new List<string> { "Agrana", "Agrolife" }
+            .OrderBy(x => x)
+            .ToList();
+
+        SortedContactPersons = new List<string> { "Dusan", "Sylvia" }
+            .OrderBy(x => x)
+            .ToList();
+
+        CurrentTrade.TradeDirection = direction;
+    }
+
+    private void NextStep()
+    {
+        if (CurrentStep < StepsCount - 1)
+        {
+            CurrentStep++;
+        }
+        else
+        {
+            // TODO: Save trade
+            Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+            Navigation.NavigateTo("/"); // Go back to home after saving
+        }
+    }
+
+    private void PrevStep()
+    {
+        if (CurrentStep > 0)
+            CurrentStep--;
+    }
+
+    private int StepsCount => 20; // number of steps- from company name till notes
+}
+

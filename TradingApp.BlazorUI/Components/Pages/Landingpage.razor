@@ -6,21 +6,21 @@
 <p>Select an action to get started:</p>
 
 <div class="d-flex flex-column align-items-center gap-3 mt-4">
-    <button class="btn btn-success btn-lg w-75" @onclick="() => NavigateToForm(true)">Offer</button>
-    <button class="btn btn-primary btn-lg w-75" @onclick="() => NavigateToForm(false)">Demand</button>
+    <button @onclick="() => GoToWizard(TradeDirectionType.Offer)">Create Offer</button>
+    <button @onclick="() => GoToWizard(TradeDirectionType.Demand)">Create Demand</button>
     <button class="btn btn-secondary btn-lg w-75" @onclick="NavigateToMenu">Menu</button>
 </div>
 
 @code {
-    private void NavigateToForm(bool isOffer)
-    {
-        Navigation.NavigateTo($"/tradeform/{isOffer}");
-    }
-
     private void NavigateToMenu()
     {
         Navigation.NavigateTo("/menu");
     }
+    private void GoToWizard(TradeDirectionType direction)
+    {
+        Navigation.NavigateTo($"/trade-wizard/{direction}");
+    }
 }
+
 
 
