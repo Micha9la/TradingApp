@@ -1,4 +1,4 @@
-﻿@page "/trade-wizard/{direction}"
+﻿@page "/trade-wizard/{direction:enum}"
 
 @using TradingApp.BlazorUI
 @inject NavigationManager Navigation
@@ -28,6 +28,17 @@
             }
         </InputSelect>
     }
+    else if (CurrentStep == 2)
+    {
+        <label>Product Name</label>
+        <InputSelect @bind-Value="CurrentTrade.Product.ProductName">
+            <option value="">-- Select Product Name --</option>
+            @foreach (var product in SortedProductName)
+            {
+                <option value="@product">@product</option>
+            }
+        </InputSelect>
+    }
     <!-- Repeat similar blocks for each property -->
 </div>
 
@@ -44,6 +55,7 @@
 
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPersons = new();
+    private List<string> SortedProductName = new();
 
     protected override void OnInitialized()
     {
@@ -54,7 +66,9 @@
         SortedContactPersons = new List<string> { "Dusan", "Sylvia" }
             .OrderBy(x => x)
             .ToList();
-
+        SortedProductName = new List<string> { "Wheat", "Barley" }
+            .OrderBy(x => x)
+            .ToList();
         CurrentTrade.TradeDirection = direction;
     }
 

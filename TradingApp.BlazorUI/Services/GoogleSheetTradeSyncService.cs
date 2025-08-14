@@ -71,7 +71,7 @@ namespace TradingApp.BlazorUI.Services
             {
                 foreach (var row in response.Values)
                 {
-                    var trade = MapRowToTrade(row); // Make sure this method works properly
+                    var trade = MapRowToTrade(row); 
                     if (trade != null)
                         trades.Add(trade);
                 }
@@ -85,17 +85,25 @@ namespace TradingApp.BlazorUI.Services
         private List<string> MapTradeToRow(TradeEntry trade)
         {
             return new List<string>
-        {
+            {
             trade.CatalogNumber.ToString(),
             trade.Date.ToString("yyyy-MM-dd"),
             trade.TradeDirection.ToString(),
-            trade.Product?.ProductName ?? "",
+
             trade.Company?.CompanyName ?? "",
             trade.Company?.ContactPerson ?? "",
+
+            trade.Product?.ProductName ?? "",
+            trade.Product?.Quantity.ToString(),
             trade.Product?.ProductQuality?.Protein.ToString(),
             trade.Product?.ProductQuality?.TestWeight.ToString(),
             trade.Product?.ProductQuality?.FallingNumber.ToString(),
-            trade.Product?.Quantity.ToString(),
+            trade.Product?.ProductQuality?.Glassiness,
+            trade.Product?.ProductQuality?.OilContent,
+            trade.Product?.ProductQuality?.DamagedKernels,
+            trade.Product?.ProductQuality?.Don,
+            trade.Product?.ProductQuality?.Afla,
+
             trade.DeliveryInfo?.DeliveryParity.ToString(),
             trade.DeliveryInfo?.LocationDetail ?? "",
             trade.Price.ToString(),
@@ -104,7 +112,7 @@ namespace TradingApp.BlazorUI.Services
             trade.ISCC.ToString(),
             trade.Records ?? "",
             trade.PrivateNotes ?? ""
-        };
+            };
         }
         // handle missing values gracefully.
         // Cast values from row[x] back into TradeEntry.
@@ -179,7 +187,7 @@ namespace TradingApp.BlazorUI.Services
 
             return value;
         }
-
+        
     }
 
 }
