@@ -34,14 +34,118 @@
     {
         <label>Product Name</label>
         <InputSelect @bind-Value="CurrentTrade.Product.ProductName">
-            <option value="">-- Select Product Name --</option>
+            <option value="">-- Select Product --</option>
             @foreach (var product in SortedProductName)
             {
                 <option value="@product">@product</option>
             }
         </InputSelect>
     }
-    <!-- Repeat similar blocks for each property -->
+    else if (CurrentStep == 3)
+    {
+        <label>Quantity</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.Quantity" />
+    }
+    else if (CurrentStep == 4)
+    {
+        <label>Protein (%)</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
+    }
+    else if (CurrentStep == 5)
+    {
+        <label>Test Weight</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
+    }
+    else if (CurrentStep == 6)
+    {
+        <label>FallingNumber</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
+    }
+    else if (CurrentStep == 7)
+    {
+        <label>Glassiness</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
+    }
+    else if (CurrentStep == 8)
+    {
+        <label>OilContent</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
+    }
+    else if (CurrentStep == 9)
+    {
+        <label>DamagedKernels</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
+    }
+    else if (CurrentStep == 10)
+    {
+        <label>Don</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
+    }
+    else if (CurrentStep == 11)
+    {
+        <label>Alfa</label>
+        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
+    }
+    else if (CurrentStep == 12)
+    {
+        <label>Delivery Parity</label>
+        <InputSelect @bind-Value="CurrentTrade.DeliveryInfo.DeliveryParity">
+            <option value="">-- Select Parity --</option>
+            @foreach (var parity in SortedDeliveryParities)
+            {
+                <option value="@parity">@parity</option>
+            }
+        </InputSelect>
+    }
+    else if (CurrentStep == 13)
+    {
+        <label>Location Detail</label>
+        <InputSelect @bind-Value="CurrentTrade.DeliveryInfo.LocationDetail">
+            <option value="">-- Select Location --</option>
+            @foreach (var location in SortedLocationDetail)
+            {
+                <option value="@location">@location</option>
+            }
+        </InputSelect>
+    }
+    else if (CurrentStep == 14)
+    {
+        <label>Price</label>
+        <InputNumber @bind-Value="CurrentTrade.Price" />
+    }
+    else if (CurrentStep == 15)
+    {
+        <label>Currency</label>
+        <InputSelect @bind-Value="CurrentTrade.Currency">
+            <option value="">-- Select Currency --</option>
+            @foreach (var currency in SortedCurrencies)
+            {
+                <option value="@currency">@currency</option>
+            }
+        </InputSelect>
+    }
+    else if (CurrentStep == 16)
+    {
+        <label>GMP</label>
+        <InputSelect @bind-Value="CurrentTrade.GMP">
+            <option value="">-- Select GMP --</option>
+            @foreach (var parity in SortedGMP)
+            {
+                <option value="@parity">@parity</option>
+            }
+        </InputSelect>
+    }
+    else if (CurrentStep == 17)
+    {
+        <label>ISCC</label>
+        <InputSelect @bind-Value="CurrentTrade.ISCC">
+            <option value="">-- Select ISCC --</option>
+            @foreach (var parity in SortedISCC)
+            {
+                <option value="@parity">@parity</option>
+            }
+        </InputSelect>
+    }
 </div>
 
 <div class="wizard-buttons">
@@ -58,7 +162,11 @@
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPersons = new();
     private List<string> SortedProductName = new();
-    private List<string> SortedLocations = new();
+    private List<string> SortedDeliveryParities = new();
+    private List<string> SortedLocationDetail = new();
+    private List<string> SortedCurrencies = new();
+    private List<string> SortedGMP = new();
+    private List<string> SortedISCC = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,14 +192,42 @@
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
-        
-        SortedLocations = trades
+
+        SortedDeliveryParities = trades
+            .Where(t => t.DeliveryInfo?.DeliveryParity != null)
+            .Select(t => t.DeliveryInfo!.DeliveryParity!.ToString())
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        SortedLocationDetail = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail))
             .Select(t => t.DeliveryInfo.LocationDetail.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
-        // you can add more lists (e.g. LocationDetail) in the same way
+
+        SortedCurrencies = trades
+            .Where(t => !string.IsNullOrWhiteSpace(t.Currency))
+            .Select(t => t.Currency.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
+            .ToList();
+
+        SortedGMP = trades
+            .Where(t => t.GMP != null)          
+            .Select(t => t.GMP.ToString())      
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        SortedISCC = trades
+            .Where(t => t.GMP != null)
+            .Select(t => t.ISCC.ToString())
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
         CurrentTrade.TradeDirection = direction;
     }
 
