@@ -1,13 +1,13 @@
 ﻿using TradingApp;
 
+
 namespace TradingApp.BlazorUI.Services
 
 {
     public interface ITradeService
     {
         Task<List<TradeEntry>> GetAllTradesAsync();
-        Task AddTradeAsync(TradeEntry trade);
-
+        
         //Task<List<string>> GetAllCompanyNamesAsync();
         //Task<List<string>> GetAllContactPersonsAsync();   
     }
@@ -26,12 +26,10 @@ namespace TradingApp.BlazorUI.Services
             // Already implemented somewhere
             return await _googleSheetService.ReadTradesAsync();
         }
-
-        public async Task AddTradeAsync(TradeEntry trade)
+        public async Task AppendTradeAsync(TradeEntry trade)
         {
-            await _googleSheetService.AddTradeAsync(trade);
+            await _googleSheetService.AppendTradeAsync(trade);
         }
-
         public async Task<List<string>> GetAllCompanyNamesAsync()
         {
             var trades = await GetAllTradesAsync();

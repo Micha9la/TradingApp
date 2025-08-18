@@ -6,6 +6,7 @@ using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
 using TradingApp.BlazorUI.Services;
 
+
 namespace TradingApp.BlazorUI
 {
     public class Program
@@ -46,6 +47,8 @@ namespace TradingApp.BlazorUI
             builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
             builder.Services.AddScoped<CsvTradeImporter>();
             builder.Services.AddScoped<GoogleSheetTradeSyncService>();
+            builder.Services.AddScoped<ITradeService, TradeService>();
+
 
             var app = builder.Build();
 

@@ -1,7 +1,9 @@
 ﻿@page "/trade-wizard/{direction:enum}"
 
-@using TradingApp.BlazorUI
 @inject NavigationManager Navigation
+@using TradingApp.BlazorUI.Services
+@inject ITradeService TradeService
+
 
 <h3>Create Trade - @direction</h3>
 
@@ -56,21 +58,43 @@
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPersons = new();
     private List<string> SortedProductName = new();
+    private List<string> SortedLocations = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        SortedCompanies = new List<string> { "Agrana", "Agrolife" }
+        var trades = await TradeService.GetAllTradesAsync();
+
+        SortedCompanies = trades
+            .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName))
+            .Select(t => t.Company.CompanyName.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
 
-        SortedContactPersons = new List<string> { "Dusan", "Sylvia" }
+        SortedContactPersons = trades
+            .Where(t => !string.IsNullOrWhiteSpace(t.Company?.ContactPerson))
+            .Select(t => t.Company.ContactPerson.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
-        SortedProductName = new List<string> { "Wheat", "Barley" }
+
+        SortedProductName = trades
+            .Where(t => !string.IsNullOrWhiteSpace(t.Product?.ProductName))
+            .Select(t => t.Product.ProductName.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
+        
+        SortedLocations = trades
+            .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail))
+            .Select(t => t.DeliveryInfo.LocationDetail.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
+            .ToList();
+        // you can add more lists (e.g. LocationDetail) in the same way
         CurrentTrade.TradeDirection = direction;
     }
+
 
     private void NextStep()
     {
@@ -94,6 +118,6 @@
 
     private int StepsCount => 20; // number of steps- from company name till notes
 
-    //
+    
 }
 
