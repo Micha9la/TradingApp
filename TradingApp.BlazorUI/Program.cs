@@ -48,6 +48,7 @@ namespace TradingApp.BlazorUI
             builder.Services.AddScoped<CsvTradeImporter>();
             builder.Services.AddScoped<GoogleSheetTradeSyncService>();
             builder.Services.AddScoped<ITradeService, TradeService>();
+            
 
 
             var app = builder.Build();

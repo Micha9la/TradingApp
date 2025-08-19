@@ -16,10 +16,13 @@
     {
         Navigation.NavigateTo("/menu");
     }
-    private void GoToWizard(TradeDirectionType direction)
+
+    private void GoToWizard(TradeDirectionType dir)
     {
-        Navigation.NavigateTo($"/trade-wizard/{direction}");
+        var value = (int)dir;
+        Navigation.NavigateTo(("/"));
     }
+
 }
 
 

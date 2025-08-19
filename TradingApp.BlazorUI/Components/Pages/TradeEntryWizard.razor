@@ -1,4 +1,4 @@
-﻿@page "/trade-wizard/{direction:enum}"
+﻿@page "/trade-wizard/{direction:int}"
 
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
@@ -154,10 +154,24 @@
 </div>
 
 @code {
-    [Parameter] public TradeDirectionType direction { get; set; }
+    [Parameter] public int direction { get; set; }
 
     private int CurrentStep { get; set; }
-    private TradeEntry CurrentTrade { get; set; } = new TradeEntry { Company = new Company(), Product = new Product { ProductQuality = new ProductQuality() }, DeliveryInfo = new DeliveryInfo() };
+    private TradeEntry CurrentTrade { get; set; } = new TradeEntry 
+    {   
+        Company = new Company(), 
+        Product = new Product { ProductQuality = new ProductQuality() }, 
+        DeliveryInfo = new DeliveryInfo() 
+    };
+
+    // Cast the int → enum every time parameters are set (handles navigation to the same component with different value)
+    protected override void OnParametersSet()
+    {
+        if (Enum.IsDefined(typeof(TradeDirectionType), direction))
+        {
+            CurrentTrade.TradeDirection = (TradeDirectionType)direction;
+        }        
+    }
 
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPersons = new();
@@ -228,7 +242,6 @@
             .OrderBy(x => x)
             .ToList();
 
-        CurrentTrade.TradeDirection = direction;
     }
 
 
