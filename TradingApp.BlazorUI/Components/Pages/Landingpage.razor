@@ -6,8 +6,9 @@
 <p>Select an action to get started:</p>
 
 <div class="d-flex flex-column align-items-center gap-3 mt-4">
-    <button @onclick="() => GoToWizard(TradeDirectionType.Offer)">Create Offer</button>
-    <button @onclick="() => GoToWizard(TradeDirectionType.Demand)">Create Demand</button>
+    <NavLink class="btn btn-primary" href="/trade-wizard/0">Offer</NavLink>
+    <NavLink class="btn btn-secondary" href="/trade-wizard/1">Demand</NavLink>
+
     <button class="btn btn-secondary btn-lg w-75" @onclick="NavigateToMenu">Menu</button>
 </div>
 

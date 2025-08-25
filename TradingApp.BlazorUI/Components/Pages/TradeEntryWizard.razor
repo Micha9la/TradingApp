@@ -4,149 +4,187 @@
 @using TradingApp.BlazorUI.Services
 @inject ITradeService TradeService
 
-
 <h3>Create Trade - @direction</h3>
 
-<div class="wizard-step">
-    @if (CurrentStep == 0)
-    {
-        <label>Company Name</label>
-        <InputSelect @bind-Value="CurrentTrade.Company.CompanyName">
-            <option value="">-- Select Company --</option>
-            @foreach (var company in SortedCompanies)
+@if (IsFinished)
+{
+    <h3>✅ Trade saved successfully!</h3>
+    <a href="/trades" class="btn btn-primary">Go to Trades</a>
+    <NavLink href="/trades" class="btn btn-primary">Go to Trades</NavLink>
+}
+else
+{
+    <div class="wizard-step">
+        @if (CurrentStep == 0)
+        {
+            <label>Company Name</label>
+            <InputText @bind-Value="CurrentTrade.Company.CompanyName"
+                       placeholder="Type or select company..."
+                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Company.CompanyName))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Company.CompanyName))
             {
-                <option value="@company">@company</option>
+                <ul class="suggestions">
+                    @foreach (var suggestion in FilteredSuggestions)
+                    {
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Company.CompanyName))">@suggestion</li>
+                    }
+                </ul>
             }
-        </InputSelect>
-    }
-    else if (CurrentStep == 1)
-    {
-        <label>Contact Person</label>
-        <InputSelect @bind-Value="CurrentTrade.Company.ContactPerson">
-            <option value="">-- Select Contact Person --</option>
-            @foreach (var person in SortedContactPersons)
+        }
+        else if (CurrentStep == 1)
+        {
+            <label>Contact Person</label>
+            <InputText @bind-Value="CurrentTrade.Company.ContactPerson"
+                       placeholder="Type or select contact person..."
+                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Company.ContactPerson))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Company.ContactPerson))
             {
-                <option value="@person">@person</option>
+                <ul class="suggestions">
+                    @foreach (var suggestion in FilteredSuggestions)
+                    {
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Company.ContactPerson))">@suggestion</li>
+                    }
+                </ul>
             }
-        </InputSelect>
-    }
-    else if (CurrentStep == 2)
-    {
-        <label>Product Name</label>
-        <InputSelect @bind-Value="CurrentTrade.Product.ProductName">
-            <option value="">-- Select Product --</option>
-            @foreach (var product in SortedProductName)
+        }
+        else if (CurrentStep == 2)
+        {
+            <label>Product Name</label>
+            <InputText @bind-Value="CurrentTrade.Product.ProductName"
+                       placeholder="Type or select product..."
+                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.ProductName))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Product.ProductName))
             {
-                <option value="@product">@product</option>
+                <ul class="suggestions">
+                    @foreach (var suggestion in FilteredSuggestions)
+                    {
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Product.ProductName))">@suggestion</li>
+                    }
+                </ul>
             }
-        </InputSelect>
-    }
-    else if (CurrentStep == 3)
-    {
-        <label>Quantity</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.Quantity" />
-    }
-    else if (CurrentStep == 4)
-    {
-        <label>Protein (%)</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
-    }
-    else if (CurrentStep == 5)
-    {
-        <label>Test Weight</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
-    }
-    else if (CurrentStep == 6)
-    {
-        <label>FallingNumber</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
-    }
-    else if (CurrentStep == 7)
-    {
-        <label>Glassiness</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
-    }
-    else if (CurrentStep == 8)
-    {
-        <label>OilContent</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
-    }
-    else if (CurrentStep == 9)
-    {
-        <label>DamagedKernels</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
-    }
-    else if (CurrentStep == 10)
-    {
-        <label>Don</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
-    }
-    else if (CurrentStep == 11)
-    {
-        <label>Alfa</label>
-        <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
-    }
-    else if (CurrentStep == 12)
-    {
-        <label>Delivery Parity</label>
-        <InputSelect @bind-Value="CurrentTrade.DeliveryInfo.DeliveryParity">
-            <option value="">-- Select Parity --</option>
-            @foreach (var parity in SortedDeliveryParities)
+        }
+        else if (CurrentStep == 3)
+        {
+            <label>Quantity</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.Quantity" />
+        }
+        else if (CurrentStep == 4)
+        {
+            <label>Protein (%)</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
+        }
+        else if (CurrentStep == 5)
+        {
+            <label>Test Weight</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
+        }
+        else if (CurrentStep == 6)
+        {
+            <label>Falling Number</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
+        }
+        else if (CurrentStep == 7)
+        {
+            <label>Glassiness</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
+        }
+        else if (CurrentStep == 8)
+        {
+            <label>Oil Content</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
+        }
+        else if (CurrentStep == 9)
+        {
+            <label>Damaged Kernels</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
+        }
+        else if (CurrentStep == 10)
+        {
+            <label>DON</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
+        }
+        else if (CurrentStep == 11)
+        {
+            <label>Aflatoxin</label>
+            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
+        }
+        else if (CurrentStep == 12)
+        {
+            <label>Delivery Parity</label>
+            <InputSelect @bind-Value="CurrentTrade.DeliveryInfo.DeliveryParity">
+                <option value="">-- Select Parity --</option>
+                @foreach (var parity in Enum.GetValues<ParityType>())
+                {
+                    <option value="@parity">@parity</option>
+                }
+            </InputSelect>
+        }
+        else if (CurrentStep == 13)
+        {
+            <label>Location Detail</label>
+            <InputText @bind-Value="CurrentTrade.DeliveryInfo.LocationDetail"
+                       placeholder="Type or select location..."
+                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.DeliveryInfo.LocationDetail))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.DeliveryInfo.LocationDetail))
             {
-                <option value="@parity">@parity</option>
+                <ul class="suggestions">
+                    @foreach (var suggestion in FilteredSuggestions)
+                    {
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.DeliveryInfo.LocationDetail))">@suggestion</li>
+                    }
+                </ul>
             }
-        </InputSelect>
-    }
-    else if (CurrentStep == 13)
-    {
-        <label>Location Detail</label>
-        <InputSelect @bind-Value="CurrentTrade.DeliveryInfo.LocationDetail">
-            <option value="">-- Select Location --</option>
-            @foreach (var location in SortedLocationDetail)
+        }
+        else if (CurrentStep == 14)
+        {
+            <label>Price</label>
+            <InputNumber @bind-Value="CurrentTrade.Price" />
+        }
+        else if (CurrentStep == 15)
+        {
+            <label>Currency</label>
+            <InputText @bind-Value="CurrentTrade.Currency"
+                       placeholder="Type or select currency..."
+                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Currency))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Currency))
             {
-                <option value="@location">@location</option>
+                <ul class="suggestions">
+                    @foreach (var suggestion in FilteredSuggestions)
+                    {
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Currency))">@suggestion</li>
+                    }
+                </ul>
             }
-        </InputSelect>
-    }
-    else if (CurrentStep == 14)
-    {
-        <label>Price</label>
-        <InputNumber @bind-Value="CurrentTrade.Price" />
-    }
-    else if (CurrentStep == 15)
-    {
-        <label>Currency</label>
-        <InputSelect @bind-Value="CurrentTrade.Currency">
-            <option value="">-- Select Currency --</option>
-            @foreach (var currency in SortedCurrencies)
-            {
-                <option value="@currency">@currency</option>
-            }
-        </InputSelect>
-    }
-    else if (CurrentStep == 16)
-    {
-        <label>GMP</label>
-        <InputSelect @bind-Value="CurrentTrade.GMP">
-            <option value="">-- Select GMP --</option>
-            @foreach (var parity in SortedGMP)
-            {
-                <option value="@parity">@parity</option>
-            }
-        </InputSelect>
-    }
-    else if (CurrentStep == 17)
-    {
-        <label>ISCC</label>
-        <InputSelect @bind-Value="CurrentTrade.ISCC">
-            <option value="">-- Select ISCC --</option>
-            @foreach (var parity in SortedISCC)
-            {
-                <option value="@parity">@parity</option>
-            }
-        </InputSelect>
-    }
-</div>
+        }
+        else if (CurrentStep == 16)
+        {
+            <label>GMP</label>
+            <InputSelect @bind-Value="CurrentTrade.GMP">
+                <option value="">-- Select GMP --</option>
+                @foreach (var g in Enum.GetValues<GMP>())
+                {
+                    <option value="@g">@g</option>
+                }
+            </InputSelect>
+        }
+        else if (CurrentStep == 17)
+        {
+            <label>ISCC</label>
+            <InputSelect @bind-Value="CurrentTrade.ISCC">
+                <option value="">-- Select ISCC --</option>
+                @foreach (var i in Enum.GetValues<ISCC>())
+                {
+                    <option value="@i">@i</option>
+                }
+            </InputSelect>
+        }
+    </div>
+}
 
 <div class="wizard-buttons">
     <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
@@ -157,6 +195,8 @@
     [Parameter] public int direction { get; set; }
 
     private int CurrentStep { get; set; }
+    private bool IsFinished { get; set; }
+
     private TradeEntry CurrentTrade { get; set; } = new TradeEntry 
     {   
         Company = new Company(), 
@@ -164,23 +204,16 @@
         DeliveryInfo = new DeliveryInfo() 
     };
 
-    // Cast the int → enum every time parameters are set (handles navigation to the same component with different value)
-    protected override void OnParametersSet()
-    {
-        if (Enum.IsDefined(typeof(TradeDirectionType), direction))
-        {
-            CurrentTrade.TradeDirection = (TradeDirectionType)direction;
-        }        
-    }
+    // Dynamic suggestions
+    private List<string> FilteredSuggestions = new();
+    private string ActiveField = "";
 
+    // Frequency-sorted lists
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPersons = new();
     private List<string> SortedProductName = new();
-    private List<string> SortedDeliveryParities = new();
     private List<string> SortedLocationDetail = new();
     private List<string> SortedCurrencies = new();
-    private List<string> SortedGMP = new();
-    private List<string> SortedISCC = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -188,74 +221,95 @@
 
         SortedCompanies = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName))
-            .Select(t => t.Company.CompanyName.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x)
+            .GroupBy(t => t.Company.CompanyName.Trim())
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .ToList();
 
         SortedContactPersons = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.Company?.ContactPerson))
-            .Select(t => t.Company.ContactPerson.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x)
+            .GroupBy(t => t.Company.ContactPerson.Trim())
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .ToList();
 
         SortedProductName = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.Product?.ProductName))
-            .Select(t => t.Product.ProductName.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x)
-            .ToList();
-
-        SortedDeliveryParities = trades
-            .Where(t => t.DeliveryInfo?.DeliveryParity != null)
-            .Select(t => t.DeliveryInfo!.DeliveryParity!.ToString())
-            .Distinct()
-            .OrderBy(x => x)
+            .GroupBy(t => t.Product.ProductName.Trim())
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .ToList();
 
         SortedLocationDetail = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail))
-            .Select(t => t.DeliveryInfo.LocationDetail.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x)
+            .GroupBy(t => t.DeliveryInfo.LocationDetail.Trim())
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .ToList();
 
         SortedCurrencies = trades
             .Where(t => !string.IsNullOrWhiteSpace(t.Currency))
-            .Select(t => t.Currency.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x)
+            .GroupBy(t => t.Currency.Trim())
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .ToList();
-
-        SortedGMP = trades
-            .Where(t => t.GMP != null)          
-            .Select(t => t.GMP.ToString())      
-            .Distinct()
-            .OrderBy(x => x)
-            .ToList();
-
-        SortedISCC = trades
-            .Where(t => t.GMP != null)
-            .Select(t => t.ISCC.ToString())
-            .Distinct()
-            .OrderBy(x => x)
-            .ToList();
-
     }
 
+    private void FilterSuggestions(ChangeEventArgs e, string field)
+    {
+        var value = e.Value?.ToString() ?? "";
+        ActiveField = field;
+
+        var source = field switch
+        {
+            nameof(CurrentTrade.Company.CompanyName) => SortedCompanies,
+            nameof(CurrentTrade.Company.ContactPerson) => SortedContactPersons,
+            nameof(CurrentTrade.Product.ProductName) => SortedProductName,
+            nameof(CurrentTrade.DeliveryInfo.LocationDetail) => SortedLocationDetail,
+            nameof(CurrentTrade.Currency) => SortedCurrencies,
+            _ => new List<string>()
+        };
+
+        FilteredSuggestions = source
+            .Where(s => s.Contains(value, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void SelectSuggestion(string suggestion, string field)
+    {
+        switch (field)
+        {
+            case nameof(CurrentTrade.Company.CompanyName):
+                CurrentTrade.Company.CompanyName = suggestion;
+                break;
+            case nameof(CurrentTrade.Company.ContactPerson):
+                CurrentTrade.Company.ContactPerson = suggestion;
+                break;
+            case nameof(CurrentTrade.Product.ProductName):
+                CurrentTrade.Product.ProductName = suggestion;
+                break;
+            case nameof(CurrentTrade.DeliveryInfo.LocationDetail):
+                CurrentTrade.DeliveryInfo.LocationDetail = suggestion;
+                break;
+            case nameof(CurrentTrade.Currency):
+                CurrentTrade.Currency = suggestion;
+                break;
+        }
+
+        FilteredSuggestions.Clear();
+        ActiveField = "";
+    }
 
     private void NextStep()
     {
         if (CurrentStep < StepsCount - 1)
         {
             CurrentStep++;
-        }
+        }        
         else
         {
-            // TODO: Save trade
             Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
-            Navigation.NavigateTo("/"); // Go back to home after saving
+            IsFinished = true;
         }
     }
 
@@ -265,8 +319,8 @@
             CurrentStep--;
     }
 
-    private int StepsCount => 20; // number of steps- from company name till notes
-
-    
+    private int StepsCount => 18; // adjust if adding/removing steps
 }
+
+
 
