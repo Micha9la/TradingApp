@@ -141,7 +141,7 @@ namespace TradingApp.BlazorUI.Services
                     Product = new Product
                     {
                         ProductName = CleanCellValue(row[i++])?.ToString() ?? string.Empty,
-                        Quantity = float.TryParse(CleanCellValue(row[i++])?.ToString(), out var quantity) ? quantity : 0,
+                        Quantity = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var quantity) ? quantity : 0,
 
                         ProductQuality = new ProductQuality
                         {

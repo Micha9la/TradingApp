@@ -16,100 +16,107 @@ else
 {
     <div class="wizard-step">
         @if (CurrentStep == 0)
-        {
+    {
+            <div class="wizard-step">
             <label>Company Name</label>
-            <InputText @bind-Value="CurrentTrade.Company.CompanyName"
-                       placeholder="Type or select company..."
-                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Company.CompanyName))" />
+            <InputText class="form-control" 
+                       @bind-Value="CurrentTrade.Company.CompanyName" 
+                       list="companyList" />
 
-            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Company.CompanyName))
-            {
-                <ul class="suggestions">
-                    @foreach (var suggestion in FilteredSuggestions)
-                    {
-                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Company.CompanyName))">@suggestion</li>
-                    }
-                </ul>
-            }
+            <datalist id="companyList">
+                @foreach (var company in SortedCompanies)
+                {
+                    <option value="@company"></option>
+                }
+            </datalist>
+
         }
         else if (CurrentStep == 1)
         {
             <label>Contact Person</label>
-            <InputText @bind-Value="CurrentTrade.Company.ContactPerson"
-                       placeholder="Type or select contact person..."
-                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Company.ContactPerson))" />
+            <InputText class="form-control" 
+                        @bind-Value="CurrentTrade.Company.ContactPerson" 
+                        list="contactList" />
 
-            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Company.ContactPerson))
-            {
-                <ul class="suggestions">
-                    @foreach (var suggestion in FilteredSuggestions)
-                    {
-                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Company.ContactPerson))">@suggestion</li>
-                    }
-                </ul>
-            }
+            <datalist id="contactList">
+                @foreach (var contact in SortedContactPerson)
+                {
+                    <option value="@contact"></option>
+                }
+            </datalist>
         }
         else if (CurrentStep == 2)
         {
             <label>Product Name</label>
-            <InputText @bind-Value="CurrentTrade.Product.ProductName"
-                       placeholder="Type or select product..."
-                       @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.ProductName))" />
+            <InputText class="form-control" 
+                        @bind-Value="CurrentTrade.Product.ProductName" 
+                        list="productList" />
 
-            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Product.ProductName))
+            <datalist id="productList">
+                @foreach (var product in SortedProductName)
+                {
+                    <option value="@product"></option>
+                }
+            </datalist>
+        }
+        else if (CurrentStep == 3)
+        {
+            <label>Quantity (tons)</label>
+            <InputNumber<int> 
+                              class="form-control"
+                              @bind-Value="CurrentTrade.Product.Quantity"
+                              @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.Quantity))" />
+
+            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Product.Quantity))
             {
                 <ul class="suggestions">
                     @foreach (var suggestion in FilteredSuggestions)
                     {
-                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Product.ProductName))">@suggestion</li>
+                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Product.Quantity))">@suggestion</li>
                     }
                 </ul>
             }
         }
-        else if (CurrentStep == 3)
-        {
-            <label>Quantity</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.Quantity" />
-        }
         else if (CurrentStep == 4)
         {
             <label>Protein (%)</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
         }
         else if (CurrentStep == 5)
         {
             <label>Test Weight</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
         }
         else if (CurrentStep == 6)
         {
             <label>Falling Number</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
         }
         else if (CurrentStep == 7)
         {
             <label>Glassiness</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
         }
         else if (CurrentStep == 8)
         {
             <label>Oil Content</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
         }
         else if (CurrentStep == 9)
         {
             <label>Damaged Kernels</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
         }
         else if (CurrentStep == 10)
         {
             <label>DON</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
+            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
         }
         else if (CurrentStep == 11)
         {
             <label>Aflatoxin</label>
-            <InputNumber @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
+            <InputNumber<float> class="form-control"
+                   @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
         }
         else if (CurrentStep == 12)
         {
@@ -142,7 +149,8 @@ else
         else if (CurrentStep == 14)
         {
             <label>Price</label>
-            <InputNumber @bind-Value="CurrentTrade.Price" />
+            <InputNumber<decimal> class="form-control"
+                      @bind-Value="CurrentTrade.Price" />
         }
         else if (CurrentStep == 15)
         {
@@ -198,7 +206,7 @@ else
     private bool IsFinished { get; set; }
 
     private TradeEntry CurrentTrade { get; set; } = new TradeEntry 
-    {   
+    { 
         Company = new Company(), 
         Product = new Product { ProductQuality = new ProductQuality() }, 
         DeliveryInfo = new DeliveryInfo() 
@@ -210,49 +218,72 @@ else
 
     // Frequency-sorted lists
     private List<string> SortedCompanies = new();
-    private List<string> SortedContactPersons = new();
+    private List<string> SortedContactPerson = new();
     private List<string> SortedProductName = new();
+    private List<string> SortedQuantities = new();
     private List<string> SortedLocationDetail = new();
     private List<string> SortedCurrencies = new();
+   
+    private Task<IEnumerable<string>> SearchCompanies(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            // show all companies alphabetically
+            return Task.FromResult(SortedCompanies.AsEnumerable());
+        }
 
-    protected override async Task OnInitializedAsync()
+        return Task.FromResult(
+            SortedCompanies
+                .Where(c => c.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(c => c)
+                .AsEnumerable()
+        );
+    }
+    //Information can be entered through the UI or via Excel, it ends up in SortedX because both come from trades.
+    protected override async Task OnInitializedAsync() 
     {
         var trades = await TradeService.GetAllTradesAsync();
 
-        SortedCompanies = trades
-            .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName))
-            .GroupBy(t => t.Company.CompanyName.Trim())
-            .OrderByDescending(g => g.Count())
-            .Select(g => g.Key)
-            .ToList();
+        SortedCompanies = trades 
+        .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName)) 
+        .GroupBy(t => t.Company.CompanyName.Trim()) 
+        .OrderByDescending(g => g.Count()) 
+        .Select(g => g.Key) 
+        .ToList(); 
+        
+        SortedContactPerson = trades 
+        .Where(t => !string.IsNullOrWhiteSpace(t.Company?.ContactPerson)) 
+        .GroupBy(t => t.Company.ContactPerson.Trim()) 
+        .OrderByDescending(g => g.Count()) 
+        .Select(g => g.Key) .ToList(); 
+        
+        SortedProductName = trades 
+        .Where(t => !string.IsNullOrWhiteSpace(t.Product?.ProductName)) 
+        .GroupBy(t => t.Product.ProductName.Trim()) 
+        .OrderByDescending(g => g.Count()) 
+        .Select(g => g.Key) 
+        .ToList(); 
+        
+        SortedQuantities = trades
+        .Where(t => t.Product?.Quantity > 0)   // only positive quantities
+        .GroupBy(t => t.Product.Quantity)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())         // store as string for suggestions
+        .ToList();
 
-        SortedContactPersons = trades
-            .Where(t => !string.IsNullOrWhiteSpace(t.Company?.ContactPerson))
-            .GroupBy(t => t.Company.ContactPerson.Trim())
-            .OrderByDescending(g => g.Count())
-            .Select(g => g.Key)
-            .ToList();
-
-        SortedProductName = trades
-            .Where(t => !string.IsNullOrWhiteSpace(t.Product?.ProductName))
-            .GroupBy(t => t.Product.ProductName.Trim())
-            .OrderByDescending(g => g.Count())
-            .Select(g => g.Key)
-            .ToList();
-
-        SortedLocationDetail = trades
-            .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail))
-            .GroupBy(t => t.DeliveryInfo.LocationDetail.Trim())
-            .OrderByDescending(g => g.Count())
-            .Select(g => g.Key)
-            .ToList();
-
-        SortedCurrencies = trades
-            .Where(t => !string.IsNullOrWhiteSpace(t.Currency))
-            .GroupBy(t => t.Currency.Trim())
-            .OrderByDescending(g => g.Count())
-            .Select(g => g.Key)
-            .ToList();
+        SortedLocationDetail = trades 
+        .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail)) 
+        .GroupBy(t => t.DeliveryInfo.LocationDetail.Trim()) 
+        .OrderByDescending(g => g.Count()) 
+        .Select(g => g.Key) 
+        .ToList(); 
+        
+        SortedCurrencies = trades 
+        .Where(t => !string.IsNullOrWhiteSpace(t.Currency)) 
+        .GroupBy(t => t.Currency.Trim()) 
+        .OrderByDescending(g => g.Count()) 
+        .Select(g => g.Key) 
+        .ToList(); 
     }
 
     private void FilterSuggestions(ChangeEventArgs e, string field)
@@ -263,8 +294,9 @@ else
         var source = field switch
         {
             nameof(CurrentTrade.Company.CompanyName) => SortedCompanies,
-            nameof(CurrentTrade.Company.ContactPerson) => SortedContactPersons,
+            nameof(CurrentTrade.Company.ContactPerson) => SortedContactPerson,
             nameof(CurrentTrade.Product.ProductName) => SortedProductName,
+            nameof(CurrentTrade.Product.Quantity) => SortedQuantities,
             nameof(CurrentTrade.DeliveryInfo.LocationDetail) => SortedLocationDetail,
             nameof(CurrentTrade.Currency) => SortedCurrencies,
             _ => new List<string>()
@@ -288,6 +320,12 @@ else
             case nameof(CurrentTrade.Product.ProductName):
                 CurrentTrade.Product.ProductName = suggestion;
                 break;
+            case nameof(CurrentTrade.Product.Quantity):
+                if (int.TryParse(suggestion, out var qty))
+                {
+                    CurrentTrade.Product.Quantity = qty;
+                }
+                break; //user will see past quantities as suggestions while typing.
             case nameof(CurrentTrade.DeliveryInfo.LocationDetail):
                 CurrentTrade.DeliveryInfo.LocationDetail = suggestion;
                 break;
@@ -305,7 +343,7 @@ else
         if (CurrentStep < StepsCount - 1)
         {
             CurrentStep++;
-        }        
+        }
         else
         {
             Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
@@ -321,6 +359,7 @@ else
 
     private int StepsCount => 18; // adjust if adding/removing steps
 }
+
 
 
 

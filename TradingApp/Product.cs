@@ -26,8 +26,8 @@ namespace TradingApp
 		}
 
 		//tons
-		private float _quantity;
-		public float Quantity
+		private int _quantity;
+		public int Quantity
 		{
 			get { return _quantity; }
 			set { _quantity = value; }

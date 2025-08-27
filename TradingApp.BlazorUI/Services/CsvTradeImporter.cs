@@ -58,7 +58,7 @@ namespace TradingApp.BlazorUI.Services
                     Product = new Product
                     {
                         ProductName = record.ProductName,
-                        Quantity = record.Quantity ?? 0,
+                        Quantity = (int)(record.Quantity ?? 0),
                         ProductQuality = new ProductQuality
                         {
                             Protein = record.Protein ?? 0,
