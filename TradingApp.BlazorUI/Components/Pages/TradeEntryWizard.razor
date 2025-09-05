@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
 @inject ITradeService TradeService
+@inject GoogleSheetTradeSyncService GoogleSheetService
 
 <h3>Create Trade - @direction</h3>
 
@@ -16,8 +17,7 @@ else
 {
     <div class="wizard-step">
         @if (CurrentStep == 0)
-    {
-            <div class="wizard-step">
+        {
             <label>Company Name</label>
             <InputText class="form-control" 
                        @bind-Value="CurrentTrade.Company.CompanyName" 
@@ -39,9 +39,9 @@ else
                         list="contactList" />
 
             <datalist id="contactList">
-                @foreach (var contact in SortedContactPerson)
+                @foreach (var person in SortedContactPerson)
                 {
-                    <option value="@contact"></option>
+                    <option value="@person"></option>
                 }
             </datalist>
         }
@@ -61,11 +61,12 @@ else
         }
         else if (CurrentStep == 3)
         {
-            <label>Quantity (tons)</label>
-            <InputNumber<int> 
-                              class="form-control"
-                              @bind-Value="CurrentTrade.Product.Quantity"
-                              @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.Quantity))" />
+                <label>Quantity (tons)</label>
+                <InputNumber TValue="int"
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.Quantity"
+                             @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.Quantity))">
+                </InputNumber>
 
             @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Product.Quantity))
             {
@@ -80,43 +81,58 @@ else
         else if (CurrentStep == 4)
         {
             <label>Protein (%)</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Protein" />
+                <InputNumber
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.ProductQuality.Protein"/>                
         }
         else if (CurrentStep == 5)
         {
             <label>Test Weight</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight" />
+                <InputNumber
+                    class="form-control"
+                    @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight"/>                
         }
         else if (CurrentStep == 6)
         {
             <label>Falling Number</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
+                <InputNumber
+                    class="form-control" 
+                    @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
         }
         else if (CurrentStep == 7)
         {
             <label>Glassiness</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness" />
+                <InputNumber
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness"/>                
         }
         else if (CurrentStep == 8)
         {
             <label>Oil Content</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.OilContent" />
+                <InputNumber
+                    class="form-control" 
+                    @bind-Value="CurrentTrade.Product.ProductQuality.OilContent"/>                
         }
         else if (CurrentStep == 9)
         {
             <label>Damaged Kernels</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels" />
+                <InputNumber
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels"/>                
         }
         else if (CurrentStep == 10)
         {
             <label>DON</label>
-            <InputNumber<float> @bind-Value="CurrentTrade.Product.ProductQuality.Don" />
+                <InputNumber
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.ProductQuality.Don"/>                 
         }
         else if (CurrentStep == 11)
         {
             <label>Aflatoxin</label>
-            <InputNumber<float> class="form-control"
-                   @bind-Value="CurrentTrade.Product.ProductQuality.Afla" />
+                <InputNumber
+                             class="form-control"
+                             @bind-Value="CurrentTrade.Product.ProductQuality.Afla"/>
         }
         else if (CurrentStep == 12)
         {
@@ -149,8 +165,9 @@ else
         else if (CurrentStep == 14)
         {
             <label>Price</label>
-            <InputNumber<decimal> class="form-control"
-                      @bind-Value="CurrentTrade.Price" />
+            <InputNumber TValue="decimal" 
+                        class="form-control"
+                        @bind-Value="CurrentTrade.Price"/>
         }
         else if (CurrentStep == 15)
         {
@@ -191,7 +208,7 @@ else
                 }
             </InputSelect>
         }
-    </div>
+   </div>
 }
 
 <div class="wizard-buttons">
@@ -338,18 +355,27 @@ else
         ActiveField = "";
     }
 
-    private void NextStep()
+    private async void NextStep()
+{
+    if (CurrentStep < StepsCount - 1)
     {
-        if (CurrentStep < StepsCount - 1)
-        {
-            CurrentStep++;
-        }
-        else
-        {
-            Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
-            IsFinished = true;
-        }
+        CurrentStep++;
     }
+    else
+    {
+        // Save trade to Google Sheet
+        
+        await GoogleSheetService.AppendTradeAsync(CurrentTrade);
+
+
+        // Reload trades (optional, for consistency)
+        // var trades = await GoogleSheetsService.ReadTradesAsync();
+
+        Console.WriteLine("Saved trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+        IsFinished = true;
+    }
+}
+
 
     private void PrevStep()
     {
