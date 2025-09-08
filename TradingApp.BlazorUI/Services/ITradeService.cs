@@ -7,7 +7,7 @@ namespace TradingApp.BlazorUI.Services
     public interface ITradeService
     {
         Task<List<TradeEntry>> GetAllTradesAsync();
-        
+        Task AppendTradeAsync(TradeEntry trade);
         //Task<List<string>> GetAllCompanyNamesAsync();
         //Task<List<string>> GetAllContactPersonsAsync();   
     }

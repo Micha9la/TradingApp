@@ -24,7 +24,7 @@ namespace TradingApp.BlazorUI.Services
                 .ToListAsync();
         }
         //The AddTradeAsync() method adds a new entry and saves it to the DB.
-        public async Task AddTradeAsync(TradeEntry entry)
+        public async Task AppendTradeAsync(TradeEntry entry)
         {
             _context.TradeEntries.Add(entry);
             await _context.SaveChangesAsync();

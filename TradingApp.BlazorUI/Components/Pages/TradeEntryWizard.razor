@@ -213,7 +213,14 @@ else
 
 <div class="wizard-buttons">
     <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
-    <button @onclick="NextStep">Next</button>
+    @if (CurrentStep < StepsCount - 1)
+    {
+        <button @onclick="NextStep">Next</button>
+    }
+    else
+    {
+        <button @onclick="FinishWizard">Finish</button>
+    }
 </div>
 
 @code {
@@ -361,19 +368,19 @@ else
     {
         CurrentStep++;
     }
-    else
-    {
+    //else
+    //{
         // Save trade to Google Sheet
         
-        await GoogleSheetService.AppendTradeAsync(CurrentTrade);
+        //await GoogleSheetService.AppendTradeAsync(CurrentTrade);
 
 
         // Reload trades (optional, for consistency)
         // var trades = await GoogleSheetsService.ReadTradesAsync();
 
-        Console.WriteLine("Saved trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
-        IsFinished = true;
-    }
+        //Console.WriteLine("Saved trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+        //IsFinished = true;
+    //}
 }
 
 
@@ -384,6 +391,22 @@ else
     }
 
     private int StepsCount => 18; // adjust if adding/removing steps
+
+    private async Task FinishWizard()
+    {
+    // Save to EF
+    await TradeService.AppendTradeAsync(CurrentTrade);
+
+    // Save to Google Sheets
+    await GoogleSheetService.AppendTradeAsync(CurrentTrade);
+
+    Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+
+    IsFinished = true;
+
+    // Optional: redirect user back to trades page
+    Navigation.NavigateTo("/trades");
+    }
 }
 
 
