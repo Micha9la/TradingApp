@@ -2,8 +2,8 @@
 
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
-@inject ITradeService TradeService
-@inject GoogleSheetTradeSyncService GoogleSheetService
+@inject EFTradeService EFTradeService
+@inject GSTradeService GSTradeService
 
 <h3>Create Trade - @direction</h3>
 
@@ -213,6 +213,7 @@ else
 
 <div class="wizard-buttons">
     <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
+
     @if (CurrentStep < StepsCount - 1)
     {
         <button @onclick="NextStep">Next</button>
@@ -222,6 +223,7 @@ else
         <button @onclick="FinishWizard">Finish</button>
     }
 </div>
+
 
 @code {
     [Parameter] public int direction { get; set; }
@@ -266,7 +268,7 @@ else
     //Information can be entered through the UI or via Excel, it ends up in SortedX because both come from trades.
     protected override async Task OnInitializedAsync() 
     {
-        var trades = await TradeService.GetAllTradesAsync();
+        var trades = await EFTradeService.GetAllTradesAsync();
 
         SortedCompanies = trades 
         .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName)) 
@@ -368,20 +370,13 @@ else
     {
         CurrentStep++;
     }
-    //else
-    //{
-        // Save trade to Google Sheet
-        
-        //await GoogleSheetService.AppendTradeAsync(CurrentTrade);
-
-
-        // Reload trades (optional, for consistency)
-        // var trades = await GoogleSheetsService.ReadTradesAsync();
-
-        //Console.WriteLine("Saved trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
-        //IsFinished = true;
-    //}
+    else
+    {
+        // Only finish, don't save here
+        await FinishWizard();
+    }
 }
+
 
 
     private void PrevStep()
@@ -394,19 +389,19 @@ else
 
     private async Task FinishWizard()
     {
-    // Save to EF
-    await TradeService.AppendTradeAsync(CurrentTrade);
+        // Save to EF
+        await EFTradeService.AppendTradeAsync(CurrentTrade);
 
-    // Save to Google Sheets
-    await GoogleSheetService.AppendTradeAsync(CurrentTrade);
+        // Save to Google Sheets
+        await GSTradeService.AppendTradeAsync(CurrentTrade);
 
-    Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+        Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
 
-    IsFinished = true;
+        IsFinished = true;
 
-    // Optional: redirect user back to trades page
-    Navigation.NavigateTo("/trades");
-    }
+        // redirect user back to trades page
+        Navigation.NavigateTo("/trades");
+        }
 }
 
 

@@ -9,7 +9,7 @@ using TradingApp.BlazorUI.Components;
 
 namespace TradingApp.BlazorUI.Services
 {
-    public class GoogleSheetTradeSyncService
+    public class GSTradeService : ITradeService
     {
         //fields
         private readonly SheetsService _sheetsService;
@@ -19,7 +19,7 @@ namespace TradingApp.BlazorUI.Services
         //Constructor: Load service account credentials.
         //Initialize the Google Sheets API client(SheetsService)
         //Store spreadsheetId and sheetName from appsettings.json
-        public GoogleSheetTradeSyncService(IConfiguration configuration)
+        public GSTradeService(IConfiguration configuration)
         {
             // Load credentials and create Google Sheets API service
             // 1. Read the JSON file from disk
@@ -60,7 +60,7 @@ namespace TradingApp.BlazorUI.Services
             await appendRequest.ExecuteAsync();
         }
         //Read (Fetch rows from the sheet and convert to C#)
-        public async Task<List<TradeEntry>> ReadTradesAsync()
+        public async Task<List<TradeEntry>> GetAllTradesAsync()
         {
             Console.WriteLine("GoogleSheetService: Reading trades...");
             var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{_sheetName}!A2:Z");

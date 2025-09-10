@@ -3,7 +3,7 @@
 @inject ITradeService TradeService
 @inject CsvTradeImporter Importer
 @inject IWebHostEnvironment Env
-@inject GoogleSheetTradeSyncService GoogleSheetService
+@inject GSTradeService GoogleSheetService
 @using TradingApp
 @using TradingApp.BlazorUI.Data
 
@@ -105,7 +105,7 @@ else
 @code {
     private async Task TestGoogleSheetRead()
     {
-        trades = await GoogleSheetService.ReadTradesAsync();
+        trades = await GoogleSheetService.GetAllTradesAsync();
 
         Console.WriteLine($"TestRead: Found {trades?.Count ?? 0} trades");
         await InvokeAsync(StateHasChanged);
@@ -117,7 +117,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        trades = await GoogleSheetService.ReadTradesAsync();
+        trades = await GoogleSheetService.GetAllTradesAsync();
     }
 
     private async Task AppendTestTrade()
@@ -162,7 +162,7 @@ else
         };
 
         await GoogleSheetService.AppendTradeAsync(testTrade);
-        trades = await GoogleSheetService.ReadTradesAsync();
+        trades = await GoogleSheetService.GetAllTradesAsync();
     }
 }
 
