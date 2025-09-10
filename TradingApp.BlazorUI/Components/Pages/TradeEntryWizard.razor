@@ -2,8 +2,8 @@
 
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
-@inject EFTradeService EFTradeService
-@inject GSTradeService GSTradeService
+
+@inject ITradeService GSTradeService
 
 <h3>Create Trade - @direction</h3>
 
@@ -268,7 +268,7 @@ else
     //Information can be entered through the UI or via Excel, it ends up in SortedX because both come from trades.
     protected override async Task OnInitializedAsync() 
     {
-        var trades = await EFTradeService.GetAllTradesAsync();
+        var trades = await GSTradeService.GetAllTradesAsync();
 
         SortedCompanies = trades 
         .Where(t => !string.IsNullOrWhiteSpace(t.Company?.CompanyName)) 
@@ -390,7 +390,7 @@ else
     private async Task FinishWizard()
     {
         // Save to EF
-        await EFTradeService.AppendTradeAsync(CurrentTrade);
+     //   await EFTradeService.AppendTradeAsync(CurrentTrade);
 
         // Save to Google Sheets
         await GSTradeService.AppendTradeAsync(CurrentTrade);

@@ -44,10 +44,10 @@ namespace TradingApp.BlazorUI
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
             //builder.Services.AddSingleton<ITradeService, InMemoryTradeService>();
-            builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
+        //   builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
             builder.Services.AddScoped<CsvTradeImporter>();
-            builder.Services.AddScoped<GSTradeService>();
-            builder.Services.AddScoped< EFTradeService>();
+            builder.Services.AddScoped<ITradeService,GSTradeService>();
+         //   builder.Services.AddScoped< EFTradeService>();
             
 
 
