@@ -9,13 +9,13 @@
     <NavLink class="btn btn-primary" href="/trade-wizard/0">Offer</NavLink>
     <NavLink class="btn btn-secondary" href="/trade-wizard/1">Demand</NavLink>
 
-    <button class="btn btn-secondary btn-lg w-75" @onclick="NavigateToMenu">Menu</button>
+    <NavLink class="btn btn-secondary btn-lg w-75" @onclick="NavigateToTrades">TradingTable</NavLink>
 </div>
 
 @code {
-    private void NavigateToMenu()
+    private void NavigateToTrades()
     {
-        Navigation.NavigateTo("/menu");
+        Navigation.NavigateTo("/trades");
     }
 
     private void GoToWizard(TradeDirectionType dir)

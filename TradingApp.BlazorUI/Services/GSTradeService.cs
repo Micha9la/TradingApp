@@ -187,7 +187,17 @@ namespace TradingApp.BlazorUI.Services
 
             return value;
         }
-        
+
+        public async Task<int> GetNextCatalogNumberAsync()
+        {
+            var trades = await GetAllTradesAsync();
+
+            if (!trades.Any())
+                return 1; // start at 1 if sheet is empty
+
+            return trades.Max(t => t.CatalogNumber) + 1;
+        }
+
     }
 
 }

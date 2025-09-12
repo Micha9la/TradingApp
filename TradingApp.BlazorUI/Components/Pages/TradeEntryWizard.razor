@@ -9,9 +9,10 @@
 
 @if (IsFinished)
 {
-    <h3>✅ Trade saved successfully!</h3>
-    <a href="/trades" class="btn btn-primary">Go to Trades</a>
-    <NavLink href="/trades" class="btn btn-primary">Go to Trades</NavLink>
+    <div class="alert alert-success">
+        ✅ Trade saved successfully!
+    </div>
+    <NavLink class="btn btn-primary mt-3" href="/trades">Go to Trades</NavLink>
 }
 else
 {
@@ -208,6 +209,17 @@ else
                 }
             </InputSelect>
         }
+        else if (CurrentStep == 18)
+        {
+            <label>Records Public</label>
+            <InputText class="form-control" @bind-Value="CurrentTrade.Records" />
+        }
+        else if (CurrentStep == 19)
+        {
+            <label>Private Notes</label>
+            <InputTextArea class="form-control" @bind-Value="CurrentTrade.PrivateNotes" />
+        }
+
    </div>
 }
 
@@ -238,6 +250,8 @@ else
         DeliveryInfo = new DeliveryInfo() 
     };
 
+    private int StepsCount => 20; // adjust if adding/removing steps
+
     // Dynamic suggestions
     private List<string> FilteredSuggestions = new();
     private string ActiveField = "";
@@ -250,21 +264,21 @@ else
     private List<string> SortedLocationDetail = new();
     private List<string> SortedCurrencies = new();
    
-    private Task<IEnumerable<string>> SearchCompanies(string searchText)
+    
+
+    private Task<IEnumerable<string>> SearchSuggestionsAsync(IEnumerable<string> source, string searchText)
     {
         if (string.IsNullOrWhiteSpace(searchText))
-        {
-            // show all companies alphabetically
-            return Task.FromResult(SortedCompanies.AsEnumerable());
-        }
+            return Task.FromResult(source);
 
         return Task.FromResult(
-            SortedCompanies
-                .Where(c => c.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(c => c)
-                .AsEnumerable()
-        );
+        source.Where(s => s.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+              .AsEnumerable()
+    );
     }
+
+
+
     //Information can be entered through the UI or via Excel, it ends up in SortedX because both come from trades.
     protected override async Task OnInitializedAsync() 
     {
@@ -377,31 +391,28 @@ else
     }
 }
 
-
-
     private void PrevStep()
     {
         if (CurrentStep > 0)
             CurrentStep--;
     }
 
-    private int StepsCount => 18; // adjust if adding/removing steps
-
     private async Task FinishWizard()
     {
         // Save to EF
      //   await EFTradeService.AppendTradeAsync(CurrentTrade);
+        
+        //unique, sequential CatalogNumber from the sheet itself
+        CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
+        CurrentTrade.Date = DateTime.UtcNow; // assign save date
 
         // Save to Google Sheets
         await GSTradeService.AppendTradeAsync(CurrentTrade);
 
         Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
 
-        IsFinished = true;
-
-        // redirect user back to trades page
-        Navigation.NavigateTo("/trades");
-        }
+        IsFinished = true; //show success screen
+    }
 }
 
 

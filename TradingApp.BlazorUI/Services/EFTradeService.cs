@@ -29,6 +29,12 @@ namespace TradingApp.BlazorUI.Services
             _context.TradeEntries.Add(entry);
             await _context.SaveChangesAsync();
         }
+
+        public Task<int> GetNextCatalogNumberAsync()
+        {
+            throw new NotImplementedException("Catalog number assignment is handled by Google Sheets in this setup.");
+        }
+
     }
 }
 
