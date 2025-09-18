@@ -3,7 +3,7 @@
 @inject ITradeService TradeService
 @inject CsvTradeImporter Importer
 @inject IWebHostEnvironment Env
-@inject GSTradeService GoogleSheetService
+@inject ITradeService GoogleSheetService
 @using TradingApp
 @using TradingApp.BlazorUI.Data
 
@@ -118,6 +118,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         trades = await GoogleSheetService.GetAllTradesAsync();
+        Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
     }
 
     private async Task AppendTestTrade()

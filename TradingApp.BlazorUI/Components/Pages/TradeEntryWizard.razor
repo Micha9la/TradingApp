@@ -409,7 +409,7 @@ else
         // Save to Google Sheets
         await GSTradeService.AppendTradeAsync(CurrentTrade);
 
-        Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
+        //Console.WriteLine("Saving trade: " + System.Text.Json.JsonSerializer.Serialize(CurrentTrade));
 
         IsFinished = true; //show success screen
     }

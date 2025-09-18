@@ -6,6 +6,7 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Humanizer;
 using TradingApp.BlazorUI.Components;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TradingApp.BlazorUI.Services
 {
@@ -63,9 +64,9 @@ namespace TradingApp.BlazorUI.Services
         public async Task<List<TradeEntry>> GetAllTradesAsync()
         {
             Console.WriteLine("GoogleSheetService: Reading trades...");
-            var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{_sheetName}!A2:Z");
+            var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{_sheetName}!A2:ZZ");
             var response = await request.ExecuteAsync();
-            var trades = new List<TradeEntry>();
+            var trades = new List<TradeEntry>();            
 
             if (response.Values != null)
             {
@@ -191,11 +192,16 @@ namespace TradingApp.BlazorUI.Services
         public async Task<int> GetNextCatalogNumberAsync()
         {
             var trades = await GetAllTradesAsync();
+            //Checks how many trades are being read and what the actual max number is.
+            Console.WriteLine($"Total trades read: {trades.Count}");
+            Console.WriteLine($"Max catalog number: {trades.Max(t => t.CatalogNumber)}");
+
 
             if (!trades.Any())
                 return 1; // start at 1 if sheet is empty
+                    
+            return trades.Where(t => t.CatalogNumber > 0).Max(t => t.CatalogNumber) + 1;
 
-            return trades.Max(t => t.CatalogNumber) + 1;
         }
 
     }
