@@ -240,6 +240,26 @@ else
 @code {
     [Parameter] public int direction { get; set; }
 
+    protected override async Task OnParametersSetAsync()
+{
+    // Keep existing initialization work if you have any - set the trade direction early.
+    // Map the int 'direction' to your enum safely.
+    if (Enum.IsDefined(typeof(TradeDirectionType), direction))
+    {
+        CurrentTrade.TradeDirection = (TradeDirectionType)direction;
+    }
+    else
+    {
+        // fallback to Offer if the param is out of range
+        CurrentTrade.TradeDirection = TradeDirectionType.Offer;
+    }
+
+    // Optional: set a readable title or debug
+    Console.WriteLine($"Trade wizard opened with direction param = {direction} -> {CurrentTrade.TradeDirection}");
+
+    await base.OnParametersSetAsync();
+}
+
     private int CurrentStep { get; set; }
     private bool IsFinished { get; set; }
 
@@ -405,6 +425,8 @@ else
         //unique, sequential CatalogNumber from the sheet itself
         CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
         CurrentTrade.Date = DateTime.UtcNow; // assign save date
+
+        Console.WriteLine($"Saving trade — Catalog: {CurrentTrade.CatalogNumber}, Direction: {CurrentTrade.TradeDirection}");
 
         // Save to Google Sheets
         await GSTradeService.AppendTradeAsync(CurrentTrade);
