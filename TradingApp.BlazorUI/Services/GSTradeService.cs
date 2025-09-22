@@ -64,15 +64,22 @@ namespace TradingApp.BlazorUI.Services
         public async Task<List<TradeEntry>> GetAllTradesAsync()
         {
             Console.WriteLine("GoogleSheetService: Reading trades...");
-            var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{_sheetName}!A2:ZZ");
-            var response = await request.ExecuteAsync();
-            var trades = new List<TradeEntry>();            
 
-            if (response.Values != null)
+            // Request the ENTIRE sheet (all rows, all columns)
+            var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, _sheetName);
+            var response = await request.ExecuteAsync();
+
+            var trades = new List<TradeEntry>();
+
+            if (response.Values != null && response.Values.Count > 1) // must be > 1 because row 0 = header
             {
-                foreach (var row in response.Values)
+                int rowIndex = 2; // start at row 2 in Google Sheets
+                foreach (var row in response.Values.Skip(1)) // Skip the header row
                 {
-                    var trade = MapRowToTrade(row); 
+                    Console.WriteLine($"Row {rowIndex}: {string.Join(" | ", row)}");
+                    rowIndex++;
+
+                    var trade = MapRowToTrade(row);
                     if (trade != null)
                         trades.Add(trade);
                 }
@@ -82,6 +89,7 @@ namespace TradingApp.BlazorUI.Services
 
             return trades;
         }
+
         //all column headers inside. to export data to csv file
         private List<string> MapTradeToRow(TradeEntry trade)
         {
