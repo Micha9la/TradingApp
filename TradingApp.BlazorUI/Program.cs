@@ -5,6 +5,7 @@ using TradingApp.BlazorUI.Components;
 using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
 using TradingApp.BlazorUI.Services;
+using MudBlazor.Services;
 
 
 namespace TradingApp.BlazorUI
@@ -47,8 +48,10 @@ namespace TradingApp.BlazorUI
         //   builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
             builder.Services.AddScoped<CsvTradeImporter>();
             builder.Services.AddScoped<ITradeService,GSTradeService>();
-         //   builder.Services.AddScoped< EFTradeService>();
-            
+            builder.Services.AddMudServices();
+
+            //   builder.Services.AddScoped< EFTradeService>();
+
 
 
             var app = builder.Build();
@@ -66,8 +69,8 @@ namespace TradingApp.BlazorUI
             app.UseAntiforgery();
 
             app.MapStaticAssets();
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+            //app.MapRazorComponents<App>()
+                //.AddInteractiveServerRenderMode();
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();

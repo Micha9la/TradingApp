@@ -18,34 +18,39 @@ else
 {
     <div class="wizard-step">
         @if (CurrentStep == 0)
-        {
-            <label>Company Name</label>
-            <InputText class="form-control" 
-                       @bind-Value="CurrentTrade.Company.CompanyName" 
-                       list="companyList" />
+{
+    <div class="wizard-step p-4">
+        <MudAutocomplete T="string"
+                 Label="Company Name"
+                 Variant="Variant.Outlined"
+                 Class="w-100"
+                 Value="CurrentTrade.Company.CompanyName"
+                 ValueChanged="val => CurrentTrade.Company.CompanyName = val"
+                 SearchFunc="SearchCompanies"
+                 Clearable="true"
+                 ResetValueOnEmptyText="true"
+                 CoerceText="true"
+                 Dense="false" />
 
-            <datalist id="companyList">
-                @foreach (var company in SortedCompanies)
-                {
-                    <option value="@company"></option>
-                }
-            </datalist>
+    </div>
+}
 
-        }
         else if (CurrentStep == 1)
-        {
-            <label>Contact Person</label>
-            <InputText class="form-control" 
-                        @bind-Value="CurrentTrade.Company.ContactPerson" 
-                        list="contactList" />
+{
+            <div class="wizard-step p-4">
+            <label class="form-label">Contact Person</label>
 
-            <datalist id="contactList">
-                @foreach (var person in SortedContactPerson)
+            <select class="form-select form-select-lg"
+                @bind="CurrentTrade.Company.ContactPerson">
+            <option value="">-- Select Contact Person --</option>
+            @foreach (var person in SortedContactPerson)
                 {
-                    <option value="@person"></option>
+                    <option value="@person">@person</option>
                 }
-            </datalist>
-        }
+                </select>
+            </div>
+}
+
         else if (CurrentStep == 2)
         {
             <label>Product Name</label>
@@ -270,6 +275,43 @@ else
         DeliveryInfo = new DeliveryInfo() 
     };
 
+    private Dictionary<string, int> CompanyUsageCount = new();
+
+    private Task<IEnumerable<string>> SearchCompanies(string value)
+{
+    // order by usage count first, then alphabetically
+    var results = SortedCompanies
+        .OrderByDescending(c => CompanyUsageCount.ContainsKey(c) ? CompanyUsageCount[c] : 0)
+        .ThenBy(c => c)
+        .Where(c => string.IsNullOrWhiteSpace(value) ||
+                    c.Contains(value, StringComparison.OrdinalIgnoreCase));
+
+    return Task.FromResult(results.AsEnumerable());
+}
+
+    private Task<IEnumerable<string>> ISearchCompanies(string value)
+    {
+        int GetCount(string c) => CompanyUsageCount.TryGetValue(c, out var count) ? count : 1;
+
+        IEnumerable<string> result;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = SortedCompanies
+                .OrderByDescending(c => GetCount(c))
+                .ThenBy(c => c);
+        }
+        else
+        {
+            result = SortedCompanies
+                .Where(c => c.Contains(value, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(c => GetCount(c))
+                .ThenBy(c => c);
+        }
+
+        return Task.FromResult(result);
+    }
+    
     private int StepsCount => 20; // adjust if adding/removing steps
 
     // Dynamic suggestions
