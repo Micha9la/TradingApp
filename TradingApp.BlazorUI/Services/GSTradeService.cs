@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Http;
 using Google.Apis.Services;
@@ -128,65 +129,144 @@ namespace TradingApp.BlazorUI.Services
         // error handling and validation needed?
         private TradeEntry MapRowToTrade(IList<object> row)
         {
-            if (row == null || row.Count < 23)
+            // If row is null or completely empty -> skip
+            if (row == null)
                 return null;
+
+            // local helper: safely get cleaned string or null (handles out-of-range)
+            //Each row is just a List<object> (one row from Google Sheets). Each element in row is a cell
+            //idx → the column index (0 = column A catalog number, 1 = column B, etc.).
+            static string GetCell(IList<object> r, int idx, Func<object, string> cleaner)
+            {
+                if (r == null || idx < 0 || idx >= r.Count)
+                    return null;
+                return cleaner(r[idx]);
+            }
 
             try
             {
                 int i = 0;
-                
+
+                // Read cells safely (CleanCellValue is your existing function)
+                //defaulting to 0 or empty string to get a usable TradeEntry object.
+                //Without it, it would crash or return null for every incomplete row
+                var catalogStr = GetCell(row, i++, CleanCellValue);
+                var dateStr = GetCell(row, i++, CleanCellValue);
+                var directionStr = GetCell(row, i++, CleanCellValue);
+
+                var companyName = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+                var contactPerson = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+
+                var productName = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+                var quantityStr = GetCell(row, i++, CleanCellValue);
+
+                var proteinStr = GetCell(row, i++, CleanCellValue);
+                var testWeightStr = GetCell(row, i++, CleanCellValue);
+                var fallingNumberStr = GetCell(row, i++, CleanCellValue);
+                var glassinessStr = GetCell(row, i++, CleanCellValue);
+                var oilContentStr = GetCell(row, i++, CleanCellValue);
+                var damagedKernelsStr = GetCell(row, i++, CleanCellValue);
+                var donStr = GetCell(row, i++, CleanCellValue);
+                var aflaStr = GetCell(row, i++, CleanCellValue);
+
+                var parityStr = GetCell(row, i++, CleanCellValue);
+                var locationDetail = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+
+                var priceStr = GetCell(row, i++, CleanCellValue);
+                var currencyStr = GetCell(row, i++, CleanCellValue) ?? "EUR";
+
+                var gmpStr = GetCell(row, i++, CleanCellValue);
+                var isccStr = GetCell(row, i++, CleanCellValue);
+
+                var recordsStr = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+                var privateNotesStr = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+
+                // Parse with fallbacks
+                var catalogNumber = int.TryParse(catalogStr, out var catalog) ? catalog : 0;
+                var date = DateTime.TryParse(dateStr, out var parsedDate) ? parsedDate : DateTime.MinValue;
+                var tradeDirection = Enum.TryParse<TradeDirectionType>(directionStr, true, out var dir) ? dir : TradeDirectionType.Offer;
+
+                var quantity = int.TryParse(quantityStr, out var qty) ? qty : 0;
+
+                var protein = float.TryParse(proteinStr, out var proteinVal) ? proteinVal : 0f;
+                var testWeight = int.TryParse(testWeightStr, out var testW) ? testW : 0;
+                var fallingNumber = int.TryParse(fallingNumberStr, out var fall) ? fall : 0;
+                var glassiness = int.TryParse(glassinessStr, out var g) ? g : 0;
+                var oilContent = int.TryParse(oilContentStr, out var oc) ? oc : 0;
+                var damagedKernels = int.TryParse(damagedKernelsStr, out var dk) ? dk : 0;
+                var don = int.TryParse(donStr, out var d) ? d : 0;
+                var afla = int.TryParse(aflaStr, out var a) ? a : 0;
+
+                var deliveryParity = Enum.TryParse<ParityType>(parityStr, true, out var parity) ? parity : ParityType.FCA;
+
+                var price = decimal.TryParse(priceStr, out var p) ? p : 0m;
+                var gmp = Enum.TryParse<GMP>(gmpStr, true, out var gmpEnum) ? gmpEnum : GMP.NonGMP;
+                var iscc = Enum.TryParse<ISCC>(isccStr, true, out var isccEnum) ? isccEnum : ISCC.NonISCC;
+
+                // If the row is essentially empty (no catalog, no company, no product) -> skip it
+                //= filter to decide if the row is basically “empty” or just junk from the sheet
+                //focusing only on the main identifiers (Company, Contact, Product, Catalog)
+                var isEmpty = catalogNumber == 0 &&
+                              string.IsNullOrWhiteSpace(companyName) &&
+                              string.IsNullOrWhiteSpace(productName) &&
+                              string.IsNullOrWhiteSpace(contactPerson);
+
+                if (isEmpty)
+                {
+                    // helpful debug: optional                    
+                    // Console.WriteLine("Skipping empty row (all important cells blank).");
+                    return null;
+                }
+
+                // Build and return object
                 return new TradeEntry
                 {
-                    CatalogNumber = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var catalog) ? catalog : 0,
-                    Date = DateTime.TryParse(CleanCellValue(row[i++])?.ToString(), out var date) ? date : DateTime.MinValue,
-                    TradeDirection = Enum.TryParse<TradeDirectionType>(CleanCellValue(row[i++])?.ToString(), true, out var direction) ? direction : TradeDirectionType.Offer,
-
+                    CatalogNumber = catalogNumber,
+                    Date = date,
+                    TradeDirection = tradeDirection,
                     Company = new Company
                     {
-                        CompanyName = CleanCellValue(row[i++])?.ToString() ?? string.Empty,
-                        ContactPerson = CleanCellValue(row[i++])?.ToString() ?? string.Empty
+                        CompanyName = companyName,
+                        ContactPerson = contactPerson
                     },
-
                     Product = new Product
                     {
-                        ProductName = CleanCellValue(row[i++])?.ToString() ?? string.Empty,
-                        Quantity = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var quantity) ? quantity : 0,
-
+                        ProductName = productName,
+                        Quantity = quantity,
                         ProductQuality = new ProductQuality
                         {
-                            Protein = float.TryParse(CleanCellValue(row[i++])?.ToString(), out var protein) ? protein : 0,
-                            TestWeight = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var testWeight) ? testWeight : 0,
-                            FallingNumber = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var falling) ? falling : 0,
-                            Glassiness = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var glassiness) ? glassiness : 0,
-                            OilContent = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var oil) ? oil : 0,
-                            DamagedKernels = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var damaged) ? damaged : 0,
-                            Don = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var don) ? don : 0,
-                            Afla = int.TryParse(CleanCellValue(row[i++])?.ToString(), out var afla) ? afla : 0
+                            Protein = protein,
+                            TestWeight = testWeight,
+                            FallingNumber = fallingNumber,
+                            Glassiness = glassiness,
+                            OilContent = oilContent,
+                            DamagedKernels = damagedKernels,
+                            Don = don,
+                            Afla = afla
                         }
                     },
-
                     DeliveryInfo = new DeliveryInfo
                     {
-                        DeliveryParity = Enum.TryParse<ParityType>(CleanCellValue(row[i++])?.ToString(), true, out var parity) ? parity : ParityType.FCA,
-                        LocationDetail = CleanCellValue(row[i++])?.ToString() ?? string.Empty
+                        DeliveryParity = deliveryParity,
+                        LocationDetail = locationDetail
                     },
-
-                    Price = decimal.TryParse(CleanCellValue(row[i++])?.ToString(), out var price) ? price : 0,
-                    Currency = CleanCellValue(row[i++])?.ToString() ?? "EUR",
-                    GMP = Enum.TryParse<GMP>(CleanCellValue(row[i++])?.ToString(), true, out var gmp) ? gmp : GMP.NonGMP,
-                    ISCC = Enum.TryParse<ISCC>(CleanCellValue(row[i++])?.ToString(), true, out var iscc) ? iscc : ISCC.NonISCC,
-                    Records = CleanCellValue(row[i++])?.ToString() ?? string.Empty,
-                    PrivateNotes = CleanCellValue(row[i++])?.ToString() ?? string.Empty
+                    Price = price,
+                    Currency = currencyStr,
+                    GMP = gmp,
+                    ISCC = iscc,
+                    Records = recordsStr,
+                    PrivateNotes = privateNotesStr
                 };
             }
-            catch (Exception error)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to map row to TradeEntry. Row: {string.Join(", ", row)}");
-                Console.WriteLine($"Error: {error.Message}");
+                Console.WriteLine($"Failed to map row to TradeEntry. Raw row: {(row == null ? "NULL" : string.Join(" | ", row))}");
+                Console.WriteLine($"Error: {ex}");
                 return null;
             }
         }
-        
+
+
         private string CleanCellValue(object cell)
         {
             var value = cell?.ToString()?.Trim();
