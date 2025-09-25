@@ -224,17 +224,26 @@ else
 }
 
 <div class="wizard-buttons">
-    <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
-
-    @if (CurrentStep < StepsCount - 1)
+    @if (!IsFinished)
     {
-        <button @onclick="NextStep">Next</button>
+        <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
+
+        @if (CurrentStep < StepsCount - 1)
+        {
+            <button @onclick="NextStep">Next</button>
+        }
+        else
+        {
+            <button @onclick="FinishWizard">Finish</button>
+        }
     }
     else
-    {
-        <button @onclick="FinishWizard">Finish</button>
+    {        
+        <NavLink class="btn btn-primary" href="/landingpage">Add Another Trade</NavLink>       
     }
 </div>
+
+
 
 
 @code {
@@ -418,10 +427,7 @@ else
     }
 
     private async Task FinishWizard()
-    {
-        // Save to EF
-     //   await EFTradeService.AppendTradeAsync(CurrentTrade);
-        
+    {        
         //unique, sequential CatalogNumber from the sheet itself
         CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
         CurrentTrade.Date = DateTime.UtcNow; // assign save date
@@ -435,6 +441,16 @@ else
 
         IsFinished = true; //show success screen
     }
+    private void StartNewTrade()
+{
+    //For button after trade was entered to reset wizard to step 0 with a fresh TradeEntry
+    CurrentTrade = new TradeEntry
+    {
+        Date = DateTime.Now
+    };
+    CurrentStep = 0;
+    IsFinished = false;
+}
 }
 
 
