@@ -5,7 +5,7 @@ using TradingApp.BlazorUI.Components;
 using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
 using TradingApp.BlazorUI.Services;
-
+using MudBlazor.Services;
 
 namespace TradingApp.BlazorUI
 {
@@ -47,8 +47,8 @@ namespace TradingApp.BlazorUI
         //   builder.Services.AddScoped<ITradeService, EFTradeService>(); //.NET uses EFTradeService whenever someone asks for ITradeService
             builder.Services.AddScoped<CsvTradeImporter>();
             builder.Services.AddScoped<ITradeService,GSTradeService>();
-         //   builder.Services.AddScoped< EFTradeService>();
-            
+            //   builder.Services.AddScoped< EFTradeService>();
+            builder.Services.AddMudServices();
 
 
             var app = builder.Build();
