@@ -1,15 +1,22 @@
 ﻿@page "/landingpage"
 @inject NavigationManager Navigation
+@using MudBlazor
 
-<h1>Welcome to the Trading App</h1>
+    <MudButton Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Filled.AddCircle" Color="Color.Primary" FullWidth="true"
+               OnClick="@(() => Navigation.NavigateTo("/trade-wizard/0"))">
+        Offer
+    </MudButton>
 
-<p>Select an action to get started:</p>
+    <MudButton Variant="Variant.Filled" Size="Size.Large" EndIcon="@Icons.Material.Filled.Send" Color="Color.Secondary" FullWidth="true"
+               OnClick="@(() => Navigation.NavigateTo("/trade-wizard/1"))">
+        Demand
+    </MudButton>
 
-<div class="d-flex flex-column align-items-center gap-3 mt-4">
-    <NavLink class="btn btn-primary" href="/trade-wizard/0">Offer</NavLink>
-    <NavLink class="btn btn-secondary" href="/trade-wizard/1">Demand</NavLink>
-    <NavLink class="btn btn-secondary btn-lg w-75" href="/trades">TradingTable</NavLink>    
-</div>
+    <MudButton Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Filled.TableView" Color="Color.Success" FullWidth="true"
+               OnClick="@(() => Navigation.NavigateTo("/trades"))">
+        Trading Table
+    </MudButton>
+
 
 @code {
     private void NavigateToTrades()
