@@ -226,20 +226,41 @@ else
 <div class="wizard-buttons">
     @if (!IsFinished)
     {
-        <button @onclick="PrevStep" disabled="@(CurrentStep == 0)">Back</button>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   Disabled="@(CurrentStep == 0)"
+                   OnClick="PrevStep">
+            Back
+        </MudButton>
 
         @if (CurrentStep < StepsCount - 1)
         {
-            <button @onclick="NextStep">Next</button>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       OnClick="NextStep">
+                Next
+            </MudButton>
         }
         else
         {
-            <button @onclick="FinishWizard">Finish</button>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       OnClick="FinishWizard">
+                Finish
+            </MudButton>
         }
     }
     else
     {        
-        <NavLink class="btn btn-primary" href="/landingpage">Add Another Trade</NavLink>       
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   OnClick="StartNewTrade">
+            Add Another Trade
+        </MudButton>       
     }
 </div>
 
