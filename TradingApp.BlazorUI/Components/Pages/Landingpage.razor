@@ -2,21 +2,21 @@
 @inject NavigationManager Navigation
 @using MudBlazor
 
-    <MudButton Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Filled.AddCircle" Color="Color.Primary" FullWidth="true"
-               OnClick="@(() => Navigation.NavigateTo("/trade-wizard/0"))">
-        Offer
-    </MudButton>
 
-    <MudButton Variant="Variant.Filled" Size="Size.Large" EndIcon="@Icons.Material.Filled.Send" Color="Color.Secondary" FullWidth="true"
-               OnClick="@(() => Navigation.NavigateTo("/trade-wizard/1"))">
-        Demand
-    </MudButton>
+<MudButton Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary" Style="background-color: cadetblue; color: white; width: 400px; height: 120px;" FullWidth="true"
+           OnClick="@(() => Navigation.NavigateTo("/trade-wizard/0"))">
+    Offer
+</MudButton>
 
-    <MudButton Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Filled.TableView" Color="Color.Success" FullWidth="true"
-               OnClick="@(() => Navigation.NavigateTo("/trades"))">
-        Trading Table
-    </MudButton>
+<MudButton Variant="Variant.Filled" Size="Size.Large" Color="Color.Secondary" Style="background-color: yellow; color: black; width: 400px; height: 120px;" FullWidth="true"
+           OnClick="@(() => Navigation.NavigateTo("/trade-wizard/1"))">
+    Demand
+</MudButton>
 
+<MudButton Variant="Variant.Filled" Size="Size.Large" Color="Color.Success" Style="background-color: forestgreen; color: white; width: 400px; height: 120px;" FullWidth="true"
+           OnClick="@(() => Navigation.NavigateTo("/trades"))">
+    Trading Table
+</MudButton>
 
 @code {
     private void NavigateToTrades()
