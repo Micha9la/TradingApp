@@ -12,7 +12,18 @@
     <div class="alert alert-success">
         ✅ Trade saved successfully!
     </div>
-    <NavLink class="btn btn-primary mt-3" href="/trades">Go to Trades</NavLink>
+    <div class="mt-3">
+        <NavLink class="btn btn-primary" href="/trades">Go to Trades</NavLink>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" OnClick="ShowSendDialog">
+            ✉️ Send to Clients
+        </MudButton>
+         <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   OnClick="StartNewTrade">
+            ➕ Add Another Trade
+        </MudButton>         
+    </div>
 }
 else
 {
@@ -252,16 +263,7 @@ else
                 Finish
             </MudButton>
         }
-    }
-    else
-    {        
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   Size="Size.Small"
-                   OnClick="StartNewTrade">
-            Add Another Trade
-        </MudButton>       
-    }
+    }    
 </div>
 
 
@@ -269,6 +271,12 @@ else
 
 @code {
     [Parameter] public int direction { get; set; }
+
+    private void ShowSendDialog()
+{
+    // Generate summary
+    
+}
 
     protected override async Task OnParametersSetAsync()
 {
