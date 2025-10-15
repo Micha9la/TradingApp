@@ -3,7 +3,12 @@
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
 @using MudBlazor
+@inject IDialogService DialogService //usfull if dialog is reused elsewhere.
 @inject ITradeService GSTradeService
+
+
+
+
 
 <h3>Create Trade - @direction</h3>
 
@@ -13,15 +18,16 @@
         ✅ Trade saved successfully!
     </div>
     <div class="mt-3">
-        <NavLink class="btn btn-primary" href="/trades">Go to Trades</NavLink>
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" OnClick="ShowSendDialog">
-            ✉️ Send to Clients
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="background-color: red; color: black;" Size="Size.Small" ´//OnClick="ShowSendDialog">
+            Send to Clients
         </MudButton>
+        <NavLink class="btn btn-primary" href="/trades">Go to Trades</NavLink>        
          <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
+                   Style="background-color: forestgreen; color: black;"
                    Size="Size.Small"
                    OnClick="StartNewTrade">
-            ➕ Add Another Trade
+            Add Another Trade
         </MudButton>         
     </div>
 }
@@ -272,11 +278,24 @@ else
 @code {
     [Parameter] public int direction { get; set; }
 
-    private void ShowSendDialog()
+
+private string GenerateTradeSummary(TradeEntry trade)
 {
-    // Generate summary
-    
+    return $@"
+Trade Summary:
+Date: {trade.Date:yyyy-MM-dd}
+Company: {trade.Company?.CompanyName}
+Contact: {trade.Company?.ContactPerson}
+Product: {trade.Product?.ProductName}
+Quantity: {trade.Product?.Quantity} tons
+Price: {trade.Price} {trade.Currency}
+Delivery: {trade.DeliveryInfo?.DeliveryParity} - {trade.DeliveryInfo?.LocationDetail}
+Notes: {trade.Records}
+
+(Generated automatically from Trade Wizard)
+";
 }
+
 
     protected override async Task OnParametersSetAsync()
 {
@@ -470,15 +489,10 @@ else
 
         IsFinished = true; //show success screen
     }
+    
     private void StartNewTrade()
 {
-    //For button after trade was entered to reset wizard to step 0 with a fresh TradeEntry
-    CurrentTrade = new TradeEntry
-    {
-        Date = DateTime.Now
-    };
-    CurrentStep = 0;
-    IsFinished = false;
+    Navigation.NavigateTo("/landingpage");
 }
 }
 

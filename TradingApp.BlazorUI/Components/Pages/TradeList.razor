@@ -99,8 +99,6 @@ else
 
 }
 
-<button @onclick="AppendTestTrade">Add Test Trade</button>
-
 <p>Total Trades: @trades?.Count</p>
 
 <button @onclick="TestGoogleSheetRead">Test Read</button>
@@ -124,49 +122,7 @@ else
         Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
     }
 
-    private async Task AppendTestTrade()
-    {
-        var testTrade = new TradeEntry
-        {
-            CatalogNumber = 999,
-            Date = DateTime.Now,
-            TradeDirection = TradeDirectionType.Offer,
-            Product = new Product
-            {
-                ProductName = "Test Product",
-                Quantity = 100,
-                ProductQuality = new ProductQuality
-                {
-                    Protein = 13.5f,
-                    TestWeight = 78,
-                    FallingNumber = 300,
-                    Glassiness = 0,
-                    OilContent = 0,
-                    DamagedKernels = 0,
-                    Don = 0,
-                    Afla = 0
-                }
-            },
-            Company = new Company
-            {
-                CompanyName = "Test Co",
-                ContactPerson = "Test Person"
-            },
-            DeliveryInfo = new DeliveryInfo
-            {
-                DeliveryParity = ParityType.FCA,
-                LocationDetail = "Test Location"
-            },
-            Price = 250,
-            Currency = "EUR",
-            GMP = GMP.NonGMP,
-            ISCC = ISCC.NonISCC,
-            Records = "Test record",
-            PrivateNotes = "Some notes"
-        };
-
-        await GoogleSheetService.AppendTradeAsync(testTrade);
-        trades = await GoogleSheetService.GetAllTradesAsync();
+    
     }
 }
 
