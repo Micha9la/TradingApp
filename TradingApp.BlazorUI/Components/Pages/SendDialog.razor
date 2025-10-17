@@ -1,0 +1,50 @@
+﻿@using MudBlazor
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        <h3>Send Trade Message</h3>
+        <MudTextField @bind-Value="_messageText"
+                      Label="Message Text"
+                      Lines="6"
+                      FullWidth="true"
+                      Variant="Variant.Outlined"
+                      Text="@_messageText" />
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton @onclick="SendWhatsApp" Variant="Variant.Filled" Style="background-color: green; color: black;" Size="Size.Small">WhatsApp</MudButton>
+        <MudButton @onclick="SendEmail" Variant="Variant.Filled" Style="background-color: darkblue; color:white;" Size="Size.Small">Email</MudButton>
+        
+        
+    </DialogActions>
+</MudDialog>
+
+@code {
+    //[CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public string PrefilledMessage { get; set; } = string.Empty;
+
+    private string _messageText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _messageText = PrefilledMessage;
+    }
+
+    private void SendWhatsApp()
+    {
+        var encoded = Uri.EscapeDataString(_messageText);
+        var url = $"https://wa.me/?text={encoded}";
+        //MudDialog.Close(DialogResult.Ok(url));
+    }
+
+    private void SendEmail()
+    {
+        var encodedSubject = Uri.EscapeDataString("Trade Offer");
+        var encodedBody = Uri.EscapeDataString(_messageText);
+        var url = $"mailto:?subject={encodedSubject}&body={encodedBody}";
+        //MudDialog.Close(DialogResult.Ok(url));
+    }
+
+}
+
