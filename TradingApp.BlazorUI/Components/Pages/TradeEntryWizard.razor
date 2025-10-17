@@ -1,11 +1,10 @@
-﻿@page "/trade-wizard/{direction:TradeDirectionType}"
+﻿@page "/trade-wizard/{direction}"
 
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
 @using MudBlazor
 @inject IDialogService DialogService //usfull if dialog is reused elsewhere.
 @inject ITradeService GSTradeService
-
 
 <h3>Create Trade - @TradeDirectionLabel</h3>
 
@@ -273,7 +272,8 @@ else
 
 
 @code {    
-    [Parameter] public TradeDirectionType direction { get; set; }
+    //[Parameter] public TradeDirectionType direction { get; set; }
+    [Parameter] public string direction { get; set; } = string.Empty;
 
     private string TradeDirectionLabel => CurrentTrade.TradeDirection.ToString();
 
@@ -308,9 +308,10 @@ else
 {
     // Keep existing initialization work if you have any - set the trade direction early.
     // Map the int 'direction' to your enum safely.
-    if (Enum.IsDefined(typeof(TradeDirectionType), direction))
+    if (Enum.TryParse<TradeDirectionType>(direction, true, out var parsed))
     {
-        CurrentTrade.TradeDirection = (TradeDirectionType)direction;
+        //CurrentTrade.TradeDirection = (TradeDirectionType)direction;
+        CurrentTrade.TradeDirection = parsed;
     }
     else
     {
