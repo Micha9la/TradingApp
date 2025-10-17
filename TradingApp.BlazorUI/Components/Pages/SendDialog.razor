@@ -1,5 +1,7 @@
 ﻿@using MudBlazor
 @inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <MudDialog>
     <DialogContent>
@@ -21,9 +23,8 @@
 </MudDialog>
 
 @code {
-    //[CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public string PrefilledMessage { get; set; } = string.Empty;
-
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
     private string _messageText = string.Empty;
 
     protected override void OnInitialized()
@@ -31,11 +32,12 @@
         _messageText = PrefilledMessage;
     }
 
-    private void SendWhatsApp()
+    private async void SendWhatsApp()
     {
         var encoded = Uri.EscapeDataString(_messageText);
         var url = $"https://wa.me/?text={encoded}";
-        //MudDialog.Close(DialogResult.Ok(url));
+        await JS.InvokeVoidAsync("window.open", url, "_blank");
+        MudDialog.Close();
     }
 
     private void SendEmail()
@@ -43,7 +45,8 @@
         var encodedSubject = Uri.EscapeDataString("Trade Offer");
         var encodedBody = Uri.EscapeDataString(_messageText);
         var url = $"mailto:?subject={encodedSubject}&body={encodedBody}";
-        //MudDialog.Close(DialogResult.Ok(url));
+        Navigation.NavigateTo(url, forceLoad: true);
+        MudDialog.Close();
     }
 
 }
