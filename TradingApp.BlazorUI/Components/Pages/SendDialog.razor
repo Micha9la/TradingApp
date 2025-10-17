@@ -8,46 +8,55 @@
         <h3>Send Trade Message</h3>
         <MudTextField @bind-Value="_messageText"
                       Label="Message Text"
-                      Lines="6"
+                      Lines="10"
                       FullWidth="true"
                       Variant="Variant.Outlined"
                       Text="@_messageText" />
     </DialogContent>
 
     <DialogActions>
-        <MudButton @onclick="SendWhatsApp" Variant="Variant.Filled" Style="background-color: green; color: black;" Size="Size.Small">WhatsApp</MudButton>
-        <MudButton @onclick="SendEmail" Variant="Variant.Filled" Style="background-color: darkblue; color:white;" Size="Size.Small">Email</MudButton>
+        <MudButton Onclick="SendWhatsApp" Variant="Variant.Filled" Style="background-color: green; color: black;" Size="Size.Small">WhatsApp</MudButton>
+        <MudButton Onclick="SendEmail" Variant="Variant.Filled" Style="background-color: darkblue; color:white;" Size="Size.Small">Email</MudButton>
         
         
     </DialogActions>
 </MudDialog>
 
 @code {
-    [Parameter] public string PrefilledMessage { get; set; } = string.Empty;
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public string PrefilledMessage { get; set; } = string.Empty;    
     private string _messageText = string.Empty;
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
 
     protected override void OnInitialized()
     {
         _messageText = PrefilledMessage;
     }
 
-    private async void SendWhatsApp()
+    private async Task SendWhatsApp()
     {
-        var encoded = Uri.EscapeDataString(_messageText);
+        var encoded = Uri.EscapeDataString(_messageText ?? string.Empty);
         var url = $"https://wa.me/?text={encoded}";
+        // open new tab so the app stays open in the current tab
         await JS.InvokeVoidAsync("window.open", url, "_blank");
-        MudDialog.Close();
+        // return a result and close the dialog
+        //MudDialog.Close(DialogResult.Ok(new { Channel = "WhatsApp" }));
     }
 
-    private void SendEmail()
+    private async Task SendEmail()
     {
         var encodedSubject = Uri.EscapeDataString("Trade Offer");
-        var encodedBody = Uri.EscapeDataString(_messageText);
+        var encodedBody = Uri.EscapeDataString(_messageText ?? string.Empty);
         var url = $"mailto:?subject={encodedSubject}&body={encodedBody}";
+        // open default mailto handler (in-app or system)
+        // using Navigation.NavigateTo(mailto) works, but on some browsers JS might be prefered:
         Navigation.NavigateTo(url, forceLoad: true);
-        MudDialog.Close();
+        // optionally wait a tick to ensure navigation started, then close the dialog
+        await Task.Delay(200);
+        MudDialog.Close(DialogResult.Ok(new { Channel = "Email" }));
     }
-
+    private void Cancel()
+    {
+        MudDialog.Cancel(); // returns DialogResult.Cancel() to the caller
+    }
 }
 
