@@ -17,7 +17,12 @@
     <DialogActions>
         <MudButton Onclick="SendWhatsApp" Variant="Variant.Filled" Style="background-color: green; color: black;" Size="Size.Small">WhatsApp</MudButton>
         <MudButton Onclick="SendEmail" Variant="Variant.Filled" Style="background-color: darkblue; color:white;" Size="Size.Small">Email</MudButton>
-        
+        <MudButton OnClick="SendSms"
+                   Variant="Variant.Filled"
+                   Style="background-color: orange; color: black;"
+                   Size="Size.Small">
+            SMS
+        </MudButton>
         
     </DialogActions>
 </MudDialog>
@@ -52,11 +57,15 @@
         Navigation.NavigateTo(url, forceLoad: true);
         // optionally wait a tick to ensure navigation started, then close the dialog
         await Task.Delay(200);
-        MudDialog.Close(DialogResult.Ok(new { Channel = "Email" }));
+        //MudDialog.Close(DialogResult.Ok(new { Channel = "Email" }));
     }
-    private void Cancel()
+   
+    private async Task SendSms()
     {
-        MudDialog.Cancel(); // returns DialogResult.Cancel() to the caller
+        var encoded = Uri.EscapeDataString(_messageText ?? string.Empty);
+        var url = $"sms:?body={encoded}";
+        await JS.InvokeVoidAsync("window.open", url, "_blank");
+        //MudDialog.Close(DialogResult.Ok(new { Channel = "SMS" }));
     }
 }
 
