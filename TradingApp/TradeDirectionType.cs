@@ -8,8 +8,8 @@ namespace TradingApp
 {
      public enum TradeDirectionType
      {
-         Offer,
-         Demand
-     }
+        Offer = 0,
+        Demand = 1
+    }
     
 }

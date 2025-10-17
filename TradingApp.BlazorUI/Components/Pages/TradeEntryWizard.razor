@@ -1,4 +1,4 @@
-﻿@page "/trade-wizard/{direction:int}"
+﻿@page "/trade-wizard/{direction:TradeDirectionType}"
 
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
@@ -7,7 +7,7 @@
 @inject ITradeService GSTradeService
 
 
-<h3>Create Trade - @direction</h3>
+<h3>Create Trade - @TradeDirectionLabel</h3>
 
 @if (IsFinished)
 {
@@ -272,10 +272,10 @@ else
 
 
 
-@code {
-    [Parameter] public int direction { get; set; }
+@code {    
+    [Parameter] public TradeDirectionType direction { get; set; }
 
-    
+    private string TradeDirectionLabel => CurrentTrade.TradeDirection.ToString();
 
     private async Task ShowSendDialog()
     {
