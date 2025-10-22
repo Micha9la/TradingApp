@@ -21,7 +21,7 @@
     </Authorized>
 
     <NotAuthorized>
-        <p>No: You are not authorized!</p>
+        <p>No: You are not authorized! You are not logged in</p>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -34,5 +34,9 @@
         var currentUser = await UserManager.GetUserAsync(claims);
 
         currentUser.FavouriteColor = "red";
+
+        await UserManager.UpdateAsync(currentUser);
+
+        //dont forget to update database with newly entered data!!
     }
 }
