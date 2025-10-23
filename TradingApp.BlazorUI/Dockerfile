@@ -5,6 +5,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
+
+
 
 
 # This stage is used to build the service project

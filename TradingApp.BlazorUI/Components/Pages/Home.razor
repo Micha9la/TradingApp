@@ -1,9 +1,25 @@
 ﻿@page "/"
 @using MudBlazor
+@inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
 <h1>Plusline Commodity Trading</h1>
 
+<MudButton Variant="Variant.Filled"
+           Color="Color.Primary"
+           Style="background-color: forestgreen; color: black;"
+           OnClick="@(() => Navigation.NavigateTo("/landingpage"))"
+           Class="mb-3"
+           Size="Size.Large">
+    Go to Landing Page
+</MudButton>
+
+<MudButton Variant="Variant.Outlined"
+           Color="Color.Secondary"
+           OnClick="@(() => Navigation.NavigateTo("/trades"))"
+           Size="Size.Large">
+    Go to Trades
+</MudButton>
 
 
