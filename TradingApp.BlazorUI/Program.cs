@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using TradingApp.BlazorUI.Components;
 using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
 using TradingApp.BlazorUI.Services;
-using MudBlazor.Services;
 
 namespace TradingApp.BlazorUI
 {
@@ -49,6 +50,10 @@ namespace TradingApp.BlazorUI
             builder.Services.AddScoped<ITradeService,GSTradeService>();
             //   builder.Services.AddScoped< EFTradeService>();
             builder.Services.AddMudServices();
+            builder.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo("/keys")) // directory inside container
+                .SetApplicationName("TradingApp");
+            builder.WebHost.UseUrls($"http://*:{Environment.GetEnvironmentVariable("PORT") ?? "8080"}");
 
 
             var app = builder.Build();
@@ -63,9 +68,10 @@ namespace TradingApp.BlazorUI
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseAntiforgery();
-
             app.MapStaticAssets();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
