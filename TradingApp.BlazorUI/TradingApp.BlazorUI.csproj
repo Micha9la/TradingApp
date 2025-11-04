@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Credentials\**" />
+    <Content Remove="Credentials\**" />
+    <EmbeddedResource Remove="Credentials\**" />
+    <None Remove="Credentials\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="9.0.7" />
@@ -29,10 +36,6 @@
     <Content Update="wwwroot\TradeData.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Credentials\" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,14 @@
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using TradingApp.BlazorUI.Components;
 using TradingApp.BlazorUI.Components.Account;
 using TradingApp.BlazorUI.Data;
 using TradingApp.BlazorUI.Services;
-using MudBlazor.Services;
 
 namespace TradingApp.BlazorUI
 {
@@ -14,6 +17,21 @@ namespace TradingApp.BlazorUI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Read credentials path from environment variable (injected by Docker)
+            var credentialPath = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+            if (string.IsNullOrEmpty(credentialPath) || !File.Exists(credentialPath))
+            {
+                Console.WriteLine("Warning: Google credentials file not found or GOOGLE_APPLICATION_CREDENTIALS not set.");
+            }
+
+            // Register custom GoogleSheetsService
+            builder.Services.AddScoped(provider =>
+            {
+                // you can move your real spreadsheet ID into configuration later
+                string spreadsheetId = "your-spreadsheet-id";
+                return new GoogleSheetsService(spreadsheetId, credentialPath);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
