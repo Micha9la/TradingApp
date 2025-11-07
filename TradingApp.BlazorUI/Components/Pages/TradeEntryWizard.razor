@@ -15,14 +15,14 @@
         ✅ Trade saved successfully!
     </div>
     <div class="mt-3">
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="background-color: red; color: black;" Size="Size.Small" @onclick="ShowSendDialog">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="background-color: red; color: black;" Size="Size.Medium" @onclick="ShowSendDialog">
             Send to Clients
         </MudButton>
         <NavLink class="btn btn-primary" href="/trades">Go to Trades</NavLink>        
          <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    Style="background-color: forestgreen; color: black;"
-                   Size="Size.Small"
+                   Size="Size.Medium"
                    OnClick="StartNewTrade">
             Add Another Trade
         </MudButton>         
@@ -88,7 +88,7 @@ else
                      SearchFunc="SearchQuantities"
                      ToStringFunc="@(q => q.HasValue ? q.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.Quantity)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
         }
 
         else if (CurrentStep == 4)
@@ -105,7 +105,7 @@ else
                      SearchFunc="SearchProtein"
                      ToStringFunc="@(p => p.HasValue ? p.Value.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Protein)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
         }
         else if (CurrentStep == 5)
         {
@@ -121,7 +121,7 @@ else
                      SearchFunc="SearchTestWeight"
                      ToStringFunc="@(t => t.HasValue ? t.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.TestWeight)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
         }
         else if (CurrentStep == 6)
 {
@@ -137,7 +137,7 @@ else
                      SearchFunc="SearchFallingNumber"
                      ToStringFunc="@(f => f.HasValue ? f.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.FallingNumber)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
 
         else if (CurrentStep == 7)
@@ -154,7 +154,7 @@ else
                      SearchFunc="SearchGlassiness"
                      ToStringFunc="@(g => g.HasValue ? g.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Glassiness)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
 else if (CurrentStep == 8)
 {
@@ -170,7 +170,7 @@ else if (CurrentStep == 8)
                      SearchFunc="SearchOilContent"
                      ToStringFunc="@(o => o.HasValue ? o.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.OilContent)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
         
         else if (CurrentStep == 9)
@@ -187,7 +187,7 @@ else if (CurrentStep == 8)
                      SearchFunc="SearchDamagedKernels"
                      ToStringFunc="@(d => d.HasValue ? d.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.DamagedKernels)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
         else if (CurrentStep == 10)
 {
@@ -203,7 +203,7 @@ else if (CurrentStep == 8)
                      SearchFunc="SearchDon"
                      ToStringFunc="@(d => d.HasValue ? d.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Don)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
         else if (CurrentStep == 11)
 {
@@ -219,7 +219,7 @@ else if (CurrentStep == 8)
                      SearchFunc="SearchAflatoxin"
                      ToStringFunc="@(a => a.HasValue ? a.Value.ToString() : string.Empty)"
                      TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Afla)))"
-                     Style="width: 300px;" />
+                     Style="width: 100%; max-width: 600px;" />
 }
         else if (CurrentStep == 12)
         {
@@ -263,9 +263,7 @@ else if (CurrentStep == 8)
                  SearchFunc="SearchPrice"                 
                  ToStringFunc="@(p => p.HasValue ? p.Value.ToString("0") : string.Empty)"
                  TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Price)))"
-
-                 Style="width: 300px;" />
-
+                 Style="width: 100%; max-width: 600px;" />
 }
         else if (CurrentStep == 15)
         {
@@ -325,7 +323,7 @@ else if (CurrentStep == 8)
     {
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
-                   Size="Size.Small"
+                   Size="Size.Large"
                    Disabled="@(CurrentStep == 0)"
                    OnClick="PrevStepAsync">
             Back
@@ -335,7 +333,7 @@ else if (CurrentStep == 8)
         {
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
-                       Size="Size.Small"
+                       Size="Size.Large"
                        OnClick="NextStepAsync">
                 Next
             </MudButton>
@@ -344,7 +342,7 @@ else if (CurrentStep == 8)
         {
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
-                       Size="Size.Small"
+                       Size="Size.Large"
                        OnClick="FinishWizard">
                 Finish
             </MudButton>
