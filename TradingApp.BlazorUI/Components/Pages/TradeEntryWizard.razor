@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @using TradingApp.BlazorUI.Services
 @using MudBlazor
+@using System.Globalization;
 @inject IDialogService DialogService //usfull if dialog is reused elsewhere.
 @inject ITradeService GSTradeService
 
@@ -75,79 +76,151 @@ else
         }
         else if (CurrentStep == 3)
         {
-                <label>Quantity (tons)</label>
-                <InputNumber TValue="int"
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.Quantity"
-                             @oninput="e => FilterSuggestions(e, nameof(CurrentTrade.Product.Quantity))">
-                </InputNumber>
-
-            @if (FilteredSuggestions?.Any() == true && ActiveField == nameof(CurrentTrade.Product.Quantity))
-            {
-                <ul class="suggestions">
-                    @foreach (var suggestion in FilteredSuggestions)
-                    {
-                        <li @onclick="() => SelectSuggestion(suggestion, nameof(CurrentTrade.Product.Quantity))">@suggestion</li>
-                    }
-                </ul>
-            }
+            <label>Quantity (tons)</label>
+            <MudAutocomplete T="int?"
+                     @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.Quantity"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchQuantities"
+                     ToStringFunc="@(q => q.HasValue ? q.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.Quantity)))"
+                     Style="width: 300px;" />
         }
+
         else if (CurrentStep == 4)
         {
             <label>Protein (%)</label>
-                <InputNumber
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.ProductQuality.Protein"/>                
+            <MudAutocomplete T="float?"
+                     @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.Protein"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchProtein"
+                     ToStringFunc="@(p => p.HasValue ? p.Value.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Protein)))"
+                     Style="width: 300px;" />
         }
         else if (CurrentStep == 5)
         {
             <label>Test Weight</label>
-                <InputNumber
-                    class="form-control"
-                    @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight"/>                
+            <MudAutocomplete T="int?"
+                   @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.TestWeight"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchTestWeight"
+                     ToStringFunc="@(t => t.HasValue ? t.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.TestWeight)))"
+                     Style="width: 300px;" />
         }
         else if (CurrentStep == 6)
-        {
-            <label>Falling Number</label>
-                <InputNumber
-                    class="form-control" 
-                    @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber" />
-        }
+{
+    <label>Falling Number</label>
+    <MudAutocomplete T="int?"
+                     @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.FallingNumber"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchFallingNumber"
+                     ToStringFunc="@(f => f.HasValue ? f.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.FallingNumber)))"
+                     Style="width: 300px;" />
+}
+
         else if (CurrentStep == 7)
-        {
-            <label>Glassiness</label>
-                <InputNumber
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness"/>                
-        }
-        else if (CurrentStep == 8)
-        {
-            <label>Oil Content</label>
-                <InputNumber
-                    class="form-control" 
-                    @bind-Value="CurrentTrade.Product.ProductQuality.OilContent"/>                
-        }
+{
+    <label>Glassiness</label>
+    <MudAutocomplete T="int?"
+                    @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.Glassiness"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchGlassiness"
+                     ToStringFunc="@(g => g.HasValue ? g.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Glassiness)))"
+                     Style="width: 300px;" />
+}
+else if (CurrentStep == 8)
+{
+    <label>Oil Content</label>
+    <MudAutocomplete T="int?"
+        @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.OilContent"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchOilContent"
+                     ToStringFunc="@(o => o.HasValue ? o.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.OilContent)))"
+                     Style="width: 300px;" />
+}
+        
         else if (CurrentStep == 9)
-        {
-            <label>Damaged Kernels</label>
-                <InputNumber
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels"/>                
-        }
+{
+    <label>Damaged Kernels</label>
+    <MudAutocomplete T="int?"
+        @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.DamagedKernels"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchDamagedKernels"
+                     ToStringFunc="@(d => d.HasValue ? d.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.DamagedKernels)))"
+                     Style="width: 300px;" />
+}
         else if (CurrentStep == 10)
-        {
-            <label>DON</label>
-                <InputNumber
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.ProductQuality.Don"/>                 
-        }
+{
+    <label>DON</label>
+    <MudAutocomplete T="int?"
+        @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.Don"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchDon"
+                     ToStringFunc="@(d => d.HasValue ? d.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Don)))"
+                     Style="width: 300px;" />
+}
         else if (CurrentStep == 11)
-        {
-            <label>Aflatoxin</label>
-                <InputNumber
-                             class="form-control"
-                             @bind-Value="CurrentTrade.Product.ProductQuality.Afla"/>
-        }
+{
+    <label>Aflatoxin</label>
+    <MudAutocomplete T="int?"
+        @ref="activeInput"
+                     @bind-Value="CurrentTrade.Product.ProductQuality.Afla"
+                     Dense="true"
+                     Clearable="true"
+                     OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                     CoerceText="false"
+                     ResetValueOnEmptyText="false"
+                     SearchFunc="SearchAflatoxin"
+                     ToStringFunc="@(a => a.HasValue ? a.Value.ToString() : string.Empty)"
+                     TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Product.ProductQuality.Afla)))"
+                     Style="width: 300px;" />
+}
         else if (CurrentStep == 12)
         {
             <label>Delivery Parity</label>
@@ -177,12 +250,23 @@ else
             }
         }
         else if (CurrentStep == 14)
-        {
-            <label>Price</label>
-            <InputNumber TValue="decimal" 
-                        class="form-control"
-                        @bind-Value="CurrentTrade.Price"/>
-        }
+{
+    <label>Price</label>
+    <MudAutocomplete T="decimal?"
+        @ref="activeInput"
+                 @bind-Value="CurrentTrade.Price"
+                 Dense="true"
+                 Clearable="true"
+                 OpenPopupIcon="@Icons.Material.Filled.ArrowDropDown"
+                 CoerceText="false"
+                 ResetValueOnEmptyText="false"
+                 SearchFunc="SearchPrice"                 
+                 ToStringFunc="@(p => p.HasValue ? p.Value.ToString("0") : string.Empty)"
+                 TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Price)))"
+
+                 Style="width: 300px;" />
+
+}
         else if (CurrentStep == 15)
         {
             <label>Currency</label>
@@ -243,7 +327,7 @@ else
                    Color="Color.Primary"
                    Size="Size.Small"
                    Disabled="@(CurrentStep == 0)"
-                   OnClick="PrevStep">
+                   OnClick="PrevStepAsync">
             Back
         </MudButton>
 
@@ -252,7 +336,7 @@ else
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Small"
-                       OnClick="NextStep">
+                       OnClick="NextStepAsync">
                 Next
             </MudButton>
         }
@@ -279,7 +363,7 @@ else
 
     private async Task ShowSendDialog()
     {
-        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "there"}!\n" +
+        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "! Here are todays indications:"}!\n" +
               $"{CurrentTrade.TradeDirection}, {CurrentTrade.Product?.ProductName},\n" +
               $"{CurrentTrade.Product?.ProductQuality?.Protein}% Protein,\n" +
               $"Price: {CurrentTrade.Price} {CurrentTrade.Currency},\n" +
@@ -319,11 +403,9 @@ else
         CurrentTrade.TradeDirection = TradeDirectionType.Offer;
     }
 
-    // Optional: set a readable title or debug
-    Console.WriteLine($"Trade wizard opened with direction param = {direction} -> {CurrentTrade.TradeDirection}");
-
     await base.OnParametersSetAsync();
 }
+private dynamic? activeInput;
 
     private int CurrentStep { get; set; }
     private bool IsFinished { get; set; }
@@ -345,7 +427,18 @@ else
     private List<string> SortedCompanies = new();
     private List<string> SortedContactPerson = new();
     private List<string> SortedProductName = new();
+
     private List<string> SortedQuantities = new();
+    private List<string> SortedProtein = new();
+    private List<string> SortedTestWeight = new();
+    private List<string> SortedFallingNumber = new();
+    private List<string> SortedGlassiness = new();
+    private List<string> SortedOilContent = new();
+    private List<string> SortedDamagedKernels = new();
+    private List<string> SortedDon = new();
+    private List<string> SortedAflatoxin = new();
+    private List<string> SortedPrice = new();
+
     private List<string> SortedLocationDetail = new();
     private List<string> SortedCurrencies = new();
    
@@ -362,7 +455,123 @@ else
     );
     }
 
+    private Task<IEnumerable<int?>> SearchIntListNullable(List<string> source, string value)
+{
+    var list = source
+        .Where(s => s.Contains(value ?? "", StringComparison.OrdinalIgnoreCase))
+        .Select(s => int.TryParse(s, out var x) ? (int?)x : null)
+        .Where(x => x.HasValue) // remove any failed parses
+        .ToList();
 
+    return Task.FromResult<IEnumerable<int?>>(list);
+}
+
+
+    private Task<IEnumerable<int?>> SearchQuantities(string value, CancellationToken token)
+    => SearchIntListNullable(SortedQuantities, value);
+
+    private Task<IEnumerable<float?>> SearchProtein(string value, CancellationToken token)
+{
+    var list = SortedProtein
+        .Where(s => s.Contains(value ?? "", StringComparison.OrdinalIgnoreCase))
+        .Select(s => float.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out var f)
+            ? (float?)f
+            : null)
+        .Where(f => f.HasValue)
+        .ToList();
+
+    return Task.FromResult<IEnumerable<float?>>(list);
+}
+
+private Task<IEnumerable<int?>> SearchTestWeight(string value, CancellationToken token)
+    => SearchIntListNullable(SortedTestWeight, value);
+private Task<IEnumerable<int?>> SearchFallingNumber(string value, CancellationToken token)
+    => SearchIntListNullable(SortedFallingNumber, value);
+
+private Task<IEnumerable<int?>> SearchGlassiness(string value, CancellationToken token)
+    => SearchIntListNullable(SortedGlassiness, value);
+
+private Task<IEnumerable<int?>> SearchOilContent(string value, CancellationToken token)
+    => SearchIntListNullable(SortedOilContent, value);
+
+private Task<IEnumerable<int?>> SearchDamagedKernels(string value, CancellationToken token)
+    => SearchIntListNullable(SortedDamagedKernels, value);
+
+private Task<IEnumerable<int?>> SearchDon(string value, CancellationToken token)
+    => SearchIntListNullable(SortedDon, value);
+
+private Task<IEnumerable<int?>> SearchAflatoxin(string value, CancellationToken token)
+    => SearchIntListNullable(SortedAflatoxin, value);
+private Task<IEnumerable<decimal?>> SearchPrice(string value, CancellationToken token)
+{
+    var list = SortedPrice
+        .Where(s => s.Contains(value ?? "", StringComparison.OrdinalIgnoreCase))
+        .Select(s => decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out var x) ? (decimal?)x : null)
+        .Where(x => x.HasValue)
+        .ToList();
+    return Task.FromResult<IEnumerable<decimal?>>(list);
+}
+
+private void OnNumericFieldTextChanged(string text, string fieldName)
+{
+    if (string.IsNullOrWhiteSpace(text))
+    {
+        SetNumericValue(fieldName, null);
+        return;
+    }
+
+    // Try to parse as int or float/decimal depending on the field
+    if (decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out var decimalValue))
+    {
+        // Decide which type based on the property
+        SetNumericValue(fieldName, decimalValue);
+    }
+}
+private void SetNumericValue(string fieldName, decimal? value)
+{
+    switch (fieldName)
+    {
+        case nameof(CurrentTrade.Product.Quantity):
+            CurrentTrade.Product.Quantity = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.Protein):
+            CurrentTrade.Product.ProductQuality.Protein = value.HasValue ? (float?)value.Value : 0;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.TestWeight):
+            CurrentTrade.Product.ProductQuality.TestWeight = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.FallingNumber):
+            CurrentTrade.Product.ProductQuality.FallingNumber = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.Glassiness):
+            CurrentTrade.Product.ProductQuality.Glassiness = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.OilContent):
+            CurrentTrade.Product.ProductQuality.OilContent = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.DamagedKernels):
+            CurrentTrade.Product.ProductQuality.DamagedKernels = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.Don):
+            CurrentTrade.Product.ProductQuality.Don = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Product.ProductQuality.Afla):
+            CurrentTrade.Product.ProductQuality.Afla = value.HasValue ? (int?)value.Value : null;
+            break;
+
+        case nameof(CurrentTrade.Price):
+            CurrentTrade.Price = value;
+            break;
+    }
+}
 
     //Information can be entered through the UI or via Excel, it ends up in SortedX because both come from trades.
     protected override async Task OnInitializedAsync() 
@@ -380,7 +589,8 @@ else
         .Where(t => !string.IsNullOrWhiteSpace(t.Company?.ContactPerson)) 
         .GroupBy(t => t.Company.ContactPerson.Trim()) 
         .OrderByDescending(g => g.Count()) 
-        .Select(g => g.Key) .ToList(); 
+        .Select(g => g.Key) .ToList()
+        .ToList();
         
         SortedProductName = trades 
         .Where(t => !string.IsNullOrWhiteSpace(t.Product?.ProductName)) 
@@ -390,11 +600,75 @@ else
         .ToList(); 
         
         SortedQuantities = trades
-        .Where(t => t.Product?.Quantity > 0)   // only positive quantities
+        .Where(t => t.Product?.Quantity > 0)
         .GroupBy(t => t.Product.Quantity)
         .OrderByDescending(g => g.Count())
-        .Select(g => g.Key.ToString())         // store as string for suggestions
+        .Select(g => g.Key.ToString())         
         .ToList();
+
+        SortedProtein = trades
+        .Where(t => t.Product?.ProductQuality?.Protein > 0)
+        .GroupBy(t => t.Product.ProductQuality.Protein)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key?.ToString(CultureInfo.InvariantCulture) ?? string.Empty) // InvariantCulture: different locales (e.g., commas vs. dots as decimal separators
+        .ToList();
+
+        SortedTestWeight = trades
+        .Where(t => t.Product?.ProductQuality.TestWeight > 0)   
+        .GroupBy(t => t.Product.ProductQuality.TestWeight)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())     
+        .ToList();
+
+        SortedFallingNumber = trades
+        .Where(t => t.Product?.ProductQuality.FallingNumber > 0)   
+        .GroupBy(t => t.Product.ProductQuality.FallingNumber)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())    
+        .ToList();
+
+        SortedGlassiness = trades
+        .Where(t => t.Product?.ProductQuality.Glassiness > 0)  
+        .GroupBy(t => t.Product.ProductQuality.Glassiness)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())    
+        .ToList();
+
+        SortedOilContent = trades
+        .Where(t => t.Product?.ProductQuality.OilContent > 0)   
+        .GroupBy(t => t.Product.ProductQuality.OilContent)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())      
+        .ToList();
+
+        SortedDamagedKernels = trades
+        .Where(t => t.Product?.ProductQuality.DamagedKernels > 0)   
+        .GroupBy(t => t.Product.ProductQuality.DamagedKernels)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())       
+        .ToList();
+
+        SortedDon = trades
+        .Where(t => t.Product?.ProductQuality.Don > 0)   
+        .GroupBy(t => t.Product.ProductQuality.Don)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())   
+        .ToList();
+
+        SortedAflatoxin = trades
+        .Where(t => t.Product?.ProductQuality.Afla > 0)   
+        .GroupBy(t => t.Product.ProductQuality.Afla)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key.ToString())    
+        .ToList();
+
+        SortedPrice = trades
+    .Where(t => t.Price.HasValue && t.Price.Value > 0)   // filter non-null positive prices
+    .GroupBy(t => t.Price.Value)                         // group by decimal value
+    .OrderByDescending(g => g.Count())
+    .Select(g => g.Key.ToString("0", CultureInfo.InvariantCulture)) // format as integer string
+    .ToList();
+
 
         SortedLocationDetail = trades 
         .Where(t => !string.IsNullOrWhiteSpace(t.DeliveryInfo?.LocationDetail)) 
@@ -463,25 +737,43 @@ else
         ActiveField = "";
     }
 
-    private async void NextStep()
+    private async Task FocusCurrentInputAsync()
 {
+    try
+    {
+        await activeInput?.FocusAsync();
+    }
+    catch { }
+}
+
+    private async Task NextStepAsync()
+{
+    // make sure any pending text changes are processed
+    await Task.Yield();
+
     if (CurrentStep < StepsCount - 1)
     {
         CurrentStep++;
+        await Task.Delay(50); // allow Blazor to render next step
+        await FocusCurrentInputAsync();
     }
     else
     {
-        // Only finish, don't save here
         await FinishWizard();
     }
 }
 
-    private void PrevStep()
+private async Task PrevStepAsync()
+{
+    if (CurrentStep > 0)
     {
-        if (CurrentStep > 0)
-            CurrentStep--;
+        CurrentStep--;
+        await Task.Delay(50);
+        await FocusCurrentInputAsync();
     }
+}
 
+    
     private async Task FinishWizard()
     {        
         //unique, sequential CatalogNumber from the sheet itself

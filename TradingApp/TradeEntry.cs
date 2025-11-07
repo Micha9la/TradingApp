@@ -54,8 +54,8 @@ namespace TradingApp
 			set { _deliveryInfo = value; }
 		}
         
-		private decimal _price;
-        public decimal Price
+		private decimal? _price;
+        public decimal? Price
 		{
 			get { return _price; }
 			set { _price = value; }
