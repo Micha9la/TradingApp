@@ -25,5 +25,11 @@ namespace TradingApp
 			set { _locationDetail = value; }
 		}
 
-	}
+        private DateTime _deliveryDate;
+        public DateTime DeliveryDate
+        {
+            get { return _deliveryDate; }
+            set { _deliveryDate = value; }
+        }
+    }
 }
