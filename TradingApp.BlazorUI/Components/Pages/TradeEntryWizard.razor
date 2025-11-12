@@ -249,7 +249,15 @@ else if (CurrentStep == 8)
                 </ul>
             }
         }
+        
         else if (CurrentStep == 14)
+{
+    <label>Delivery Date</label>
+    <InputText @bind-Value="CurrentTrade.DeliveryInfo.DeliveryDate" class="form-control" />
+    
+}
+else if (CurrentStep == 15)
+
 {
     <label>Price</label>
     <MudAutocomplete T="decimal?"
@@ -265,7 +273,7 @@ else if (CurrentStep == 8)
                  TextChanged="@(text => OnNumericFieldTextChanged(text, nameof(CurrentTrade.Price)))"
                  Style="width: 100%; max-width: 600px;" />
 }
-        else if (CurrentStep == 15)
+        else if (CurrentStep == 16)
         {
             <label>Currency</label>
             <InputText @bind-Value="CurrentTrade.Currency"
@@ -282,7 +290,7 @@ else if (CurrentStep == 8)
                 </ul>
             }
         }
-        else if (CurrentStep == 16)
+        else if (CurrentStep == 17)
         {
             <label>GMP</label>
             <InputSelect @bind-Value="CurrentTrade.GMP">
@@ -293,7 +301,7 @@ else if (CurrentStep == 8)
                 }
             </InputSelect>
         }
-        else if (CurrentStep == 17)
+        else if (CurrentStep == 18)
         {
             <label>ISCC</label>
             <InputSelect @bind-Value="CurrentTrade.ISCC">
@@ -304,12 +312,12 @@ else if (CurrentStep == 8)
                 }
             </InputSelect>
         }
-        else if (CurrentStep == 18)
+        else if (CurrentStep == 19)
         {
             <label>Records Public</label>
             <InputText class="form-control" @bind-Value="CurrentTrade.Records" />
         }
-        else if (CurrentStep == 19)
+        else if (CurrentStep == 20)
         {
             <label>Private Notes</label>
             <InputTextArea class="form-control" @bind-Value="CurrentTrade.PrivateNotes" />
@@ -415,7 +423,7 @@ private dynamic? activeInput;
         DeliveryInfo = new DeliveryInfo() 
     };
 
-    private int StepsCount => 20; // adjust if adding/removing steps
+    private int StepsCount => 21; // adjust if adding/removing steps
 
     // Dynamic suggestions
     private List<string> FilteredSuggestions = new();

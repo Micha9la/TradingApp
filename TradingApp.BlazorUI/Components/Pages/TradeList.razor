@@ -75,7 +75,9 @@ else
         <TemplateColumn Title="LocationDetails">
             @context.DeliveryInfo.LocationDetail.ValueOrEmpty()
         </TemplateColumn>
-
+        <TemplateColumn Title="DeliveryDate">
+            @context.DeliveryInfo.DeliveryDate.ValueOrEmpty()
+        </TemplateColumn>
         <TemplateColumn Title="Price">
             @context.Price.ValueOrEmpty()
         </TemplateColumn>
