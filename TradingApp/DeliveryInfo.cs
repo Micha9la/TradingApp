@@ -29,7 +29,7 @@ namespace TradingApp
         public string DeliveryDate
         {
             get { return _deliveryDate; }
-            set { _deliveryDate = string.Empty; }
+            set { _deliveryDate = value; }
         }
     }
 }
