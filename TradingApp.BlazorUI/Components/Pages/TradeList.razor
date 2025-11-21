@@ -31,6 +31,7 @@ else
                  MultiSelection="true"
                  Items="@trades"
                  Filterable="true"
+                 FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive"
                  QuickFilter="@QuickFilter"
                  Hideable="true" 
                  Groupable="false"
@@ -63,15 +64,20 @@ else
 
             <PropertyColumn Property="x => x.Company.CompanyName"
                             Title="Company"
-                            Filterable="true" />
-
+                            Filterable="true"
+                            FilterFunction="@CompanyNameFilter"
+                            DataType="DataGridColumnType.String" />
             <PropertyColumn Property="x => x.Company.ContactPerson"
                             Title="Contact Person"
-                            Filterable="true" />
+                            Filterable="true"
+                            FilterFunction="@ContactPersonFilter"
+                            DataType="DataGridColumnType.String" />
 
             <PropertyColumn Property="x => x.Product.ProductName"
                             Title="Product"
-                            Filterable="true" />
+                            Filterable="true"
+                            FilterFunction="@ProductNameFilter"
+                            DataType="DataGridColumnType.String" />
 
             <PropertyColumn Property="x => x.Product.Quantity"
                             Title="Quantity" />
@@ -96,7 +102,9 @@ else
             <PropertyColumn Property="x => x.DeliveryInfo.DeliveryParity"
                             Title="DeliveryParity" />
             <PropertyColumn Property="x => x.DeliveryInfo.LocationDetail"
-                            Title="LocationDetail" />
+                            Title="LocationDetail"
+                            FilterFunction="@LocationFilter"
+                            DataType="DataGridColumnType.String" />
             <PropertyColumn Property="x => x.DeliveryInfo.DeliveryDate"
                             Title="DeliveryDate" />
 
@@ -146,6 +154,32 @@ else
         trades = await GoogleSheetService.GetAllTradesAsync();
         Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
     }
+
+    // Generic case-insensitive substring filter.
+    // selector returns the value to compare (can be string or other), we convert safely to string.
+    private bool CaseInsensitiveFilter<T>(TradeEntry entry, string filterValue, Func<TradeEntry, T> selector)
+    {
+        if (string.IsNullOrWhiteSpace(filterValue))
+            return true;
+
+        filterValue = filterValue.Trim().ToLower();
+
+        var valueObj = selector(entry);
+        if (valueObj == null)
+            return false;
+
+        var valueStr = valueObj.ToString()!.ToLower();
+        return valueStr.Contains(filterValue);
+    }
+
+    private bool ContactPersonFilter(TradeEntry entry, string filterValue)
+        => CaseInsensitiveFilter(entry, filterValue, x => x.Company?.ContactPerson);
+    private bool CompanyNameFilter(TradeEntry entry, string filterValue)
+        => CaseInsensitiveFilter(entry, filterValue, x => x.Company?.CompanyName);
+    private bool ProductNameFilter(TradeEntry entry, string filterValue)
+        => CaseInsensitiveFilter(entry, filterValue, x => x.Product?.ProductName);
+    private bool LocationFilter(TradeEntry entry, string filterValue)
+    => CaseInsensitiveFilter(entry, filterValue, x => x.DeliveryInfo?.LocationDetail);
 
     private bool QuickFilter(TradeEntry entry)
     {
