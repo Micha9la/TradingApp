@@ -1,4 +1,5 @@
 ﻿@page "/trades"
+
 @using TradingApp.BlazorUI.Services
 @inject ITradeService TradeService
 @inject CsvTradeImporter Importer
@@ -6,6 +7,8 @@
 @inject ITradeService GoogleSheetService
 @using TradingApp
 @using TradingApp.BlazorUI.Data
+@using MudBlazor
+
 
 <h3>Imported Trades</h3>
 <div class="d-flex flex-column align-items-center gap-3 mt-4">
@@ -23,82 +26,78 @@ else if (!trades.Any())
 
 }
 else
-{    
-    <QuickGrid TGridItem="TradeEntry" Items="trades.AsQueryable()">
-    <PropertyColumn Property="@(t => t.CatalogNumber)" Title="Catalog #" />
-    <PropertyColumn Property="@(t => t.Date)" Title="Date" Format="d" />
-    <PropertyColumn Property="@(t => t.TradeDirection)" Title="Direction" />
+{
+    <MudDataGrid T="TradeEntry"
+                 Items="@trades"
+                 Filterable="true"
+                 Groupable="false"
+                 SortMode="SortMode.Multiple"
+                 EditMode="DataGridEditMode.Cell"
+                 @ref="gridRef">
 
-        <TemplateColumn Title="Company">
-            @context.Company.CompanyName.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="ContactPerson">
-            @context.Company.ContactPerson.ValueOrEmpty()
-        </TemplateColumn>
+        <!-- Top toolbar -->
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Trades</MudText>
+            <MudSpacer />
 
-        <TemplateColumn Title="ProductName">
-            @context.Product.ProductName.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Quantity">
-            @context.Product.Quantity.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Protein">
-            @context.Product.ProductQuality.Protein.ValueOrEmpty()
-        </TemplateColumn>
+            <!-- Global Quick Filter -->
+            <MudTextField @bind-Value="_search"
+                          Placeholder="Search all columns"
+                          Adornment="Adornment.Start"
+                          Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" />
+        </ToolBarContent>
 
-        <TemplateColumn Title="TestWeight">
-            @context.Product.ProductQuality.TestWeight.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="FallingNumber">
-            @context.Product.ProductQuality.FallingNumber.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Glassiness">
-            @context.Product.ProductQuality.Glassiness.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="OilContent">
-            @context.Product.ProductQuality.OilContent.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="DamagedKernels">
-            @context.Product.ProductQuality.DamagedKernels.ValueOrEmpty()
-        </TemplateColumn>
+        <Columns>
 
-        <TemplateColumn Title="Don">
-            @context.Product.ProductQuality.Don.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Afla">
-            @context.Product.ProductQuality.Afla.ValueOrEmpty()
-        </TemplateColumn>
+            <SelectColumn T="TradeEntry" />
 
-        <TemplateColumn Title="DeliveryParity">
-            @context.DeliveryInfo.DeliveryParity.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="LocationDetails">
-            @context.DeliveryInfo.LocationDetail.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="DeliveryDate">
-            @context.DeliveryInfo.DeliveryDate.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Price">
-            @context.Price.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="Currency">
-            @context.Currency.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="GMP">
-            @context.GMP.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="ISCC">
-            @context.ISCC.ValueOrEmpty()
-        </TemplateColumn>
+            <PropertyColumn Property="x => x.CatalogNumber" Title="Catalog No" />
+            <PropertyColumn Property="x => x.Date" Title="Date" Format="d" />
 
-        <TemplateColumn Title="Records">
-            @context.Records.ValueOrEmpty()
-        </TemplateColumn>
-        <TemplateColumn Title="PrivateNotes">
-            @context.PrivateNotes.ValueOrEmpty()
-        </TemplateColumn>
-    </QuickGrid>
+            <PropertyColumn Property="x => x.TradeDirection" Title="Direction" />
 
+            <PropertyColumn Property="x => x.Company.CompanyName"
+                            Title="Company"
+                            Filterable="true" />
+
+            <PropertyColumn Property="x => x.Company.ContactPerson"
+                            Title="Contact Person"
+                            Filterable="true" />
+
+            <PropertyColumn Property="x => x.Product.ProductName"
+                            Title="Product"
+                            Filterable="true" />
+
+            <PropertyColumn Property="x => x.Product.Quantity"
+                            Title="Quantity" />
+
+            <PropertyColumn Property="x => x.Price" Title="Price" />
+            <PropertyColumn Property="x => x.Currency" Title="Currency" />
+
+            <PropertyColumn Property="x => x.Records" Title="Records" />
+            <PropertyColumn Property="x => x.PrivateNotes" Title="Private Notes" Editable="true" />
+
+            
+
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="TradeEntry" />
+        </PagerContent>
+    
+</MudDataGrid>
+
+    @if (_events.Any())
+    {
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="Events">
+                @foreach (var ev in _events)
+                {
+                    <MudText Typo="Typo.body2">@ev</MudText>
+                }
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    }
 }
 
 <p>Total Trades: @trades?.Count</p>
@@ -106,6 +105,23 @@ else
 <button @onclick="TestGoogleSheetRead">Test Read</button>
 
 @code {
+    private List<TradeEntry> trades = new();
+    private MudDataGrid<TradeEntry>? gridRef;
+    private string _search = "";
+    private List<string> _events = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        trades = await GoogleSheetService.GetAllTradesAsync();
+        Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
+    }
+
+
+    private void ShareViaWhatsApp(TradeEntry entry)
+    {
+        
+    }
+
     private async Task TestGoogleSheetRead()
     {
         trades = await GoogleSheetService.GetAllTradesAsync();
@@ -114,18 +130,6 @@ else
         await InvokeAsync(StateHasChanged);
     }
 }
-
-@code {
-    private List<TradeEntry> trades = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        trades = await GoogleSheetService.GetAllTradesAsync();
-        Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
-    }
-
-    
-    }
 }
 
 

@@ -383,7 +383,7 @@ else if (CurrentStep == 15)
 
     private async Task ShowSendDialog()
     {
-        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "! Here are todays indications:"}!\n" +
+        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "! Here are todays indications:"}\n" +
               $"{CurrentTrade.TradeDirection}, {CurrentTrade.Product?.ProductName},\n" +
               $"{CurrentTrade.Product?.ProductQuality?.Protein}% Protein,\n" +
               $"Price: {CurrentTrade.Price} {CurrentTrade.Currency},\n" +
