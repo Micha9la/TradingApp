@@ -28,11 +28,15 @@ else if (!trades.Any())
 else
 {
     <MudDataGrid T="TradeEntry"
+                 MultiSelection="true"
                  Items="@trades"
                  Filterable="true"
+                 QuickFilter="@QuickFilter"
+                 Hideable="true" 
                  Groupable="false"
                  SortMode="SortMode.Multiple"
                  EditMode="DataGridEditMode.Cell"
+                 CanEdit="true"
                  @ref="gridRef">
 
         <!-- Top toolbar -->
@@ -72,12 +76,39 @@ else
             <PropertyColumn Property="x => x.Product.Quantity"
                             Title="Quantity" />
 
+            <PropertyColumn Property="x => x.Product.ProductQuality.Protein"
+                            Title="Protein" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.TestWeight"
+                            Title="TestWeight" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.FallingNumber"
+                            Title="FallingNumber" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.Glassiness"
+                            Title="Glassiness" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.OilContent"
+                            Title="OilContent" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.DamagedKernels"
+                            Title="DamagedKernels" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.Don"
+                            Title="Don" />
+            <PropertyColumn Property="x => x.Product.ProductQuality.Afla"
+                            Title="Afla" />
+
+            <PropertyColumn Property="x => x.DeliveryInfo.DeliveryParity"
+                            Title="DeliveryParity" />
+            <PropertyColumn Property="x => x.DeliveryInfo.LocationDetail"
+                            Title="LocationDetail" />
+            <PropertyColumn Property="x => x.DeliveryInfo.DeliveryDate"
+                            Title="DeliveryDate" />
+
             <PropertyColumn Property="x => x.Price" Title="Price" />
             <PropertyColumn Property="x => x.Currency" Title="Currency" />
 
+            <PropertyColumn Property="x => x.GMP" Title="GMP" />
+            <PropertyColumn Property="x => x.ISCC" Title="ISCC" />
+
             <PropertyColumn Property="x => x.Records" Title="Records" />
             <PropertyColumn Property="x => x.PrivateNotes" Title="Private Notes" Editable="true" />
-
+            
             
 
         </Columns>
@@ -86,7 +117,7 @@ else
         </PagerContent>
     
 </MudDataGrid>
-
+//for logging to see what grid does
     @if (_events.Any())
     {
         <MudExpansionPanels>
@@ -102,7 +133,7 @@ else
 
 <p>Total Trades: @trades?.Count</p>
 
-<button @onclick="TestGoogleSheetRead">Test Read</button>
+
 
 @code {
     private List<TradeEntry> trades = new();
@@ -114,6 +145,24 @@ else
     {
         trades = await GoogleSheetService.GetAllTradesAsync();
         Console.WriteLine($"Loaded {trades.Count} trades from Google Sheets"); //logging
+    }
+
+    private bool QuickFilter(TradeEntry entry)
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        var s = _search.ToLower();
+
+        return
+            entry.Company?.CompanyName?.ToLower().Contains(s) == true ||
+            entry.Company?.ContactPerson?.ToLower().Contains(s) == true ||
+            entry.Product?.ProductName?.ToLower().Contains(s) == true ||
+            entry.DeliveryInfo.DeliveryParity.ToString().ToLower().Contains(s) == true ||
+            entry.DeliveryInfo.LocationDetail.ToString().ToLower().Contains(s) == true ||
+            entry.DeliveryInfo.DeliveryDate?.ToLower().Contains(s) == true ||
+            entry.TradeDirection.ToString().ToLower().Contains(s) ||
+            entry.CatalogNumber.ToString().Contains(s);
     }
 
 
