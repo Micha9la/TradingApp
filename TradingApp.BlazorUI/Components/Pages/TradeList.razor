@@ -26,7 +26,9 @@ else if (!trades.Any())
 
 }
 else
-{
+{  //<!-- Scroll wrapper for mobile --> 
+    <div class="datagrid-scroll-wrapper"> 
+        <div style="min-width:980px
     <MudDataGrid T="TradeEntry"
                  MultiSelection="true"
                  Items="@trades"
@@ -36,8 +38,9 @@ else
                  Hideable="true" 
                  Groupable="false"
                  SortMode="SortMode.Multiple"
-                 EditMode="DataGridEditMode.Cell"
+                 EditMode="DataGridEditMode.Cell"                
                  CanEdit="true"
+                 BreakPoint="Breakpoint.None"
                  @ref="gridRef">
 
         <!-- Top toolbar -->
@@ -125,6 +128,10 @@ else
         </PagerContent>
     
 </MudDataGrid>
+</div> 
+</div> 
+<!-- END SCROLL WRAPPER -->
+
 //for logging to see what grid does
     @if (_events.Any())
     {
