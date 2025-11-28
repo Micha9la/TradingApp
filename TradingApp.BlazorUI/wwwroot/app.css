@@ -64,6 +64,17 @@ h1:focus {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+/* Fix MudBlazor icons scaling (Bootstrap safe reset) */
+.mud-icon-root svg {
+    width: auto !important;
+    height: 1em !important;
+    max-height: 24px !important;
+    max-width: 24px !important;
+}
+.mud-input-root input {
+    font-size: inherit !important;
+}
+
 
 
 
