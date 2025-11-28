@@ -68,7 +68,6 @@ namespace TradingApp.BlazorUI
             //   builder.Services.AddScoped< EFTradeService>();
             builder.Services.AddMudServices();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
