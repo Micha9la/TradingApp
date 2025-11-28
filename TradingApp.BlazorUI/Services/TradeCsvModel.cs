@@ -16,6 +16,7 @@
         // Delivery info
         public string? DeliveryParity { get; set; }
         public string? LocationDetail { get; set; }
+        public string? DeliveryDate { get; set; }
 
         // Pricing
         public decimal? Price { get; set; }

@@ -116,6 +116,7 @@ namespace TradingApp.BlazorUI.Services
 
             trade.DeliveryInfo?.DeliveryParity.ToString(),
             trade.DeliveryInfo?.LocationDetail ?? "",
+            trade.DeliveryInfo?.DeliveryDate ?? "",
             trade.Price.ToString(),
             trade.Currency,
             trade.GMP.ToString(),
@@ -171,6 +172,7 @@ namespace TradingApp.BlazorUI.Services
 
                 var parityStr = GetCell(row, i++, CleanCellValue);
                 var locationDetail = GetCell(row, i++, CleanCellValue) ?? string.Empty;
+                var deliveryDateStr = GetCell(row, i++, CleanCellValue);
 
                 var priceStr = GetCell(row, i++, CleanCellValue);
                 var currencyStr = GetCell(row, i++, CleanCellValue) ?? "EUR";
@@ -248,7 +250,8 @@ namespace TradingApp.BlazorUI.Services
                     DeliveryInfo = new DeliveryInfo
                     {
                         DeliveryParity = deliveryParity,
-                        LocationDetail = locationDetail
+                        LocationDetail = locationDetail,
+                        DeliveryDate = deliveryDateStr,
                     },
                     Price = price,
                     Currency = currencyStr,

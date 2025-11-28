@@ -43,10 +43,17 @@ namespace TradingApp.BlazorUI.Services
                 if (_context.TradeEntries.Any(t => t.CatalogNumber == record.CatalogNumber))
                     continue;
 
-                Enum.TryParse<TradeDirectionType>(record.TradeDirection, out var tradeDirection);
+                Enum.TryParse<TradeDirectionType>(record.TradeDirection?.Trim(), true, out var tradeDirection);
                 Enum.TryParse<ParityType>(record.DeliveryParity, out var parity);
-                Enum.TryParse<GMP>(record.GMP, out var gmp);
-                Enum.TryParse<ISCC>(record.ISCC, out var iscc);
+                Enum.TryParse<GMP>(record.GMP?.Trim(), true, out var gmp);
+                Enum.TryParse<ISCC>(record.ISCC?.Trim(), true, out var iscc);
+
+
+                // Safe date parsing
+                var deliveryDate = string.IsNullOrWhiteSpace(record.DeliveryDate)
+                    ? string.Empty
+                    : record.DeliveryDate.Trim();
+
                 DateTime.TryParse(record.Date, out var parsedDate);
 
                 var trade = new TradeEntry
@@ -73,8 +80,9 @@ namespace TradingApp.BlazorUI.Services
                     },
                     DeliveryInfo = new DeliveryInfo
                     {
-                        DeliveryParity = Enum.Parse<ParityType>(record.DeliveryParity),
-                        LocationDetail = record.LocationDetail
+                        DeliveryParity = parity,
+                        LocationDetail = record.LocationDetail?.Trim() ?? string.Empty,
+                        DeliveryDate = deliveryDate
                     },
                     Price = record.Price ?? 0,
                     Currency = record.Currency,

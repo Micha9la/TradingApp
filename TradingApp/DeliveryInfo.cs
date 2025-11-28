@@ -9,8 +9,8 @@ namespace TradingApp
     public class DeliveryInfo
     {
         public int Id { get; set; }
-        private ParityType _deliveryParity;
 
+        private ParityType _deliveryParity;
 		public  ParityType DeliveryParity
 		{
 			get { return _deliveryParity; }
