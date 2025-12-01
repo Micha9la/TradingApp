@@ -769,6 +769,50 @@ private void SetNumericValue(string fieldName, decimal? value)
         ActiveField = "";
     }
 
+
+private string BuildTradeSummary()
+{
+    // Direction label from enum
+    var dirLabel = CurrentTrade.TradeDirection == TradeDirectionType.Offer
+        ? "Indicative offer"
+        : "Indicative bid";
+
+    // Catalog number (you use int, so just ToString)
+    var catalog = CurrentTrade.CatalogNumber.ToString();
+
+    // Product name (null-safe)
+    var productName = CurrentTrade.Product?.ProductName ?? "n/a";
+
+    // Quantity - handle nullable or non-nullable quantity safely
+    string qty;
+    if (CurrentTrade.Product?.Quantity is int q) // works if Quantity is int or int?
+        qty = $"{q}t";
+    else
+        qty = "n/a";
+
+    // Delivery parity (DeliveryInfo may be null; DeliveryParity is enum, non-nullable)
+    var parity = CurrentTrade.DeliveryInfo != null
+        ? CurrentTrade.DeliveryInfo.DeliveryParity.ToString()
+        : "";
+
+    // Location detail
+    var location = CurrentTrade.DeliveryInfo?.LocationDetail ?? "";
+
+    // Price - handle decimal? safely
+    string price;
+    if (CurrentTrade.Price is decimal p)
+        price = p.ToString("0", CultureInfo.InvariantCulture); // integer-like formatting
+    else
+        price = "n/a";
+
+    // DeliveryDate is a free-form string in your model — keep it as-is
+    var deliveryDate = CurrentTrade.DeliveryInfo?.DeliveryDate ?? "n/a";
+
+    // Build and return the one-line summary
+    return $"{dirLabel}: {catalog}.{productName}, {qty}, {parity} {location}, {price}€/t, {deliveryDate}";
+}
+
+
     private async Task FocusCurrentInputAsync()
 {
     try
@@ -780,13 +824,25 @@ private void SetNumericValue(string fieldName, decimal? value)
 
     private async Task NextStepAsync()
 {
-    // make sure any pending text changes are processed
     await Task.Yield();
+
+    // If we are about to enter Step 19 (i.e., coming from Step 18)
+    if (CurrentStep == 18)
+    {
+        // Assign next catalog number now so the summary shows the correct value
+        CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
+
+        // Prefill editable summary only if empty
+        if (string.IsNullOrWhiteSpace(CurrentTrade.Records))
+        {
+            CurrentTrade.Records = BuildTradeSummary();
+        }
+    }
 
     if (CurrentStep < StepsCount - 1)
     {
         CurrentStep++;
-        await Task.Delay(50); // allow Blazor to render next step
+        await Task.Delay(50);
         await FocusCurrentInputAsync();
     }
     else
@@ -794,6 +850,9 @@ private void SetNumericValue(string fieldName, decimal? value)
         await FinishWizard();
     }
 }
+
+
+
 
 private async Task PrevStepAsync()
 {
@@ -805,8 +864,28 @@ private async Task PrevStepAsync()
     }
 }
 
-    
     private async Task FinishWizard()
+{
+    // If Records somehow empty at final save, fill with generated summary
+    if (string.IsNullOrWhiteSpace(CurrentTrade.Records))
+    {
+        CurrentTrade.Records = BuildTradeSummary();
+    }
+
+    // unique, sequential CatalogNumber from the sheet itself
+    CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
+    CurrentTrade.Date = DateTime.UtcNow; // assign save date
+
+    Console.WriteLine($"Saving trade — Catalog: {CurrentTrade.CatalogNumber}, Direction: {CurrentTrade.TradeDirection}");
+
+    // Save to Google Sheets
+    await GSTradeService.AppendTradeAsync(CurrentTrade);
+
+    IsFinished = true; //show success screen
+}
+
+
+    private async Task FinishWizard2()
     {        
         //unique, sequential CatalogNumber from the sheet itself
         CurrentTrade.CatalogNumber = await GSTradeService.GetNextCatalogNumberAsync();
