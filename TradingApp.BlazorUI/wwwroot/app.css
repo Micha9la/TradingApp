@@ -63,3 +63,9 @@ h1:focus {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+.records-highlight {
+    background-color: #e8f5e9 !important; /* soft green */
+    font-weight: 600;
+    transition: background-color 120ms ease;
+    cursor: pointer;
+}

@@ -5,6 +5,7 @@
 @inject CsvTradeImporter Importer
 @inject IWebHostEnvironment Env
 @inject ITradeService GoogleSheetService
+@inject IJSRuntime JS
 @using TradingApp
 @using TradingApp.BlazorUI.Data
 @using MudBlazor
@@ -55,6 +56,14 @@ else
                           Adornment="Adornment.Start"
                           Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" />
+
+                    <!-- NEW: Send via WhatsApp -->
+                    <MudButton Variant="Variant.Filled" Color="Color.Success"                               
+                               OnClick="SendSelectedViaWhatsApp">
+                        WhatsApp
+                    </MudButton>
+            
+
         </ToolBarContent>
 
         <Columns>
@@ -116,14 +125,22 @@ else
             <PropertyColumn Property="x => x.Currency" Title="Currency" />
 
             <PropertyColumn Property="x => x.GMP" Title="GMP" />
-            <PropertyColumn Property="x => x.ISCC" Title="ISCC" />
+                    <PropertyColumn Property="x => x.ISCC" Title="ISCC" />
 
-            <PropertyColumn Property="x => x.Records" Title="Records" />
-            <PropertyColumn Property="x => x.PrivateNotes" Title="Private Notes" Editable="true" />
-            
-            
+                    <!-- Records column with clickable highlight -->
+                    <PropertyColumn T="TradeEntry" TProperty="string" Property="x => x.Records" Title="Records">
+                        <CellTemplate Context="cellContext">
+                            <div class="@(_selectedTrades.Contains(cellContext.Item) ? "records-highlight" : "")"
+                                 @onclick="() => ToggleRecordSelection(cellContext.Item)"
+                                 style="cursor:pointer">
+                                @cellContext.Item.Records
+                            </div>
+                        </CellTemplate>
+                    </PropertyColumn>
 
-        </Columns>
+
+                    <PropertyColumn Property="x => x.PrivateNotes" Title="Private Notes" Editable="true" />
+                </Columns>
         <PagerContent>
             <MudDataGridPager T="TradeEntry" />
         </PagerContent>
@@ -156,6 +173,7 @@ else
     private MudDataGrid<TradeEntry>? gridRef;
     private string _search = "";
     private List<string> _events = new();
+    private HashSet<TradeEntry> _selectedTrades = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -207,11 +225,45 @@ else
             entry.CatalogNumber.ToString().Contains(s);
     }
 
-
-    private void ShareViaWhatsApp(TradeEntry entry)
+    private void ToggleRecordSelection(TradeEntry item)
     {
-        
+        if (_selectedTrades.Contains(item))
+            _selectedTrades.Remove(item);
+        else
+            _selectedTrades.Add(item);
+
+        StateHasChanged();
     }
+
+
+    private async Task SendSelectedViaWhatsApp()
+    {
+        if (_selectedTrades == null || !_selectedTrades.Any())
+            return;
+
+        var message = string.Join("%0A", _selectedTrades.Select(t =>
+            Uri.EscapeDataString(t.Records ?? "")));
+
+        var whatsappUrl = $"https://wa.me/?text={message}";
+
+        await JS.InvokeVoidAsync("open", whatsappUrl, "_blank");
+    }
+    private string RecordsCellClass(TradeEntry item, string value)
+    {
+        return _selectedTrades.Contains(item) ? "records-highlight" : string.Empty;
+    }
+    private void ToggleSelection(TradeEntry item)
+    {
+        if (_selectedTrades.Contains(item))
+            _selectedTrades.Remove(item);
+        else
+            _selectedTrades.Add(item);
+
+        StateHasChanged();
+    }
+
+
+
 
     private async Task TestGoogleSheetRead()
     {

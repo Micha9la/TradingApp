@@ -380,14 +380,11 @@ else if (CurrentStep == 15)
     [Parameter] public string direction { get; set; } = string.Empty;
 
     private string TradeDirectionLabel => CurrentTrade.TradeDirection.ToString();
-
+    //158.barley 65kg, 300t, FCA Senica, 155€/t, 11-12/2025
     private async Task ShowSendDialog()
     {
-        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "! Here are todays indications:"}\n" +
-              $"{CurrentTrade.TradeDirection}, {CurrentTrade.Product?.ProductName},\n" +
-              $"{CurrentTrade.Product?.ProductQuality?.Protein}% Protein,\n" +
-              $"Price: {CurrentTrade.Price} {CurrentTrade.Currency},\n" +
-              $"Notes: {CurrentTrade.Records}\n\n" +
+        var message = $"Hello {CurrentTrade.Company?.ContactPerson ?? "! "}\n" +          
+              $" {CurrentTrade.Records}\n\n" +
               "Regards,";
 
     var parameters = new DialogParameters
